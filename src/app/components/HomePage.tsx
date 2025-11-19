@@ -1,8 +1,9 @@
 
 
-export default function Header() {
+export default function HomePage() {
   return (
     <div>
+
       
     </div>
   )
