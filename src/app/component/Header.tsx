@@ -153,7 +153,9 @@ export function Header() {
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
-        <i className="fa-solid fa-cart-arrow-down fa-xl"></i>
+        <div className="ml-4 mt-2">
+          < i className="fa-solid fa-cart-arrow-down fa-xl"></i>
+        </div>
       </NavigationMenuList>
     </NavigationMenu>
         </div>

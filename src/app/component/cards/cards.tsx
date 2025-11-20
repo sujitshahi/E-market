@@ -13,9 +13,23 @@ import { Label } from "@/components/ui/label"
 
 export function Cards() {
   return (
-    <div className="mt-5">
-      <Card className="w-full max-w-sm">
-      <CardHeader>
+    <div className="mt-5 p-2">
+      <Card className="w-full max-w-sm border-none bg-gray-200 shadow-lg">
+        <div>
+          <div className="h-full w-full p -2">
+        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c2hvZXN8ZW58MHx8MHx8fDA%3D" alt="" />
+        </div>
+        
+        <div>
+          <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+          <p className="text-tiny uppercase font-bold">Shoes</p>
+          <small className="text-default-500">Brand: Nike</small>
+          {/* <h4 className="font-bold text-large">Frontend Radio</h4> */}
+          </CardHeader>
+        </div>
+        </div>
+      
+      {/* <CardHeader>
         <CardTitle>Login to your account</CardTitle>
         <CardDescription>
           Enter your email below to login to your account
@@ -58,7 +72,7 @@ export function Cards() {
         <Button variant="outline" className="w-full">
           Login with Google
         </Button>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
     </div>
     
