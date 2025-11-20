@@ -1,12 +1,11 @@
 import {Card, CardHeader, CardBody, Image} from "@heroui/react";
-import { use } from "react";
-
+import { useRouter } from "next/navigation";
 
 export default function Page() {
-
+    const router = useRouter();
   return (
-    <div className=" grid grid-cols-4 gap-4 p-4 m-4 justify-center font-bold">
-        <div className="border-2 rounded-lg w-[300px]">
+    <div className=" grid grid-cols-4 gap-6 p-4 m-4 justify-center font-bold" >
+        <div className="border-2 rounded-lg w-[300px]" onClick={() => router.push(`/productdetail`)}>
             <Card className="py-4">
                 <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
                     <p className="text-2xl textuppercase font-bold">Shoes</p>
@@ -21,7 +20,7 @@ export default function Page() {
             </Card>
         </div>
 
-        <div className=" border-2 rounded-lg w-[300px]">
+        <div className=" border-2 rounded-lg w-[300px]" onClick={() => router.push(`/productdetail`)}>
             <Card className="py-4">
                 <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
                     <p className="uppercase text-2xl">watches</p>
@@ -39,11 +38,11 @@ export default function Page() {
             </Card>
         </div>
 
-        <div className="border-2 rounded-lg w-[300px]">
+        <div className="border-2 rounded-lg w-[300px]" onClick={() => router.push(`/productdetail`)}>
             <Card className="py-4">
                 <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
                     <p className="uppercase text-2xl">jeans</p>
-                    <small className="text-3xl">Brand: Funky Denim</small>
+                    <small className="text-3xl">Brand: Denim</small>
                     
                 </CardHeader>
                 <CardBody className="overflow-visible py-2">
@@ -57,7 +56,7 @@ export default function Page() {
             </Card>
         </div>
 
-        <div className="border-2 rounded-lg w-[300px]">
+        <div className="border-2 rounded-lg w-[300px]" onClick={() => router.push(`/productdetail`)}>
             <Card className="py-4">
                 <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
                     <p className="uppercase text-2xl">Daily Mix</p>
@@ -75,7 +74,6 @@ export default function Page() {
             </Card>
         </div>
     </div>
-
     
   );
 }

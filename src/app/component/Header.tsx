@@ -11,7 +11,6 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { Input } from "@/components/ui/input" 
 import { Button } from "@/components/ui/button"
@@ -88,7 +87,7 @@ export function Header() {
           <NavigationMenuTrigger className="text-xl">Women</NavigationMenuTrigger>
           <NavigationMenuContent className="bg-black text-white">
             <ul className="grid w-[300px] gap-4">
-              <li>
+              
                 {components.map((component) => (
                 <ListItem
                   key={component.title}
@@ -98,6 +97,7 @@ export function Header() {
                   {component.description}
                 </ListItem>
                 ))}
+                
                 <NavigationMenuLink asChild>
                   <Link href="#">
                     <div className="font-medium">Jewelery</div>
@@ -107,7 +107,7 @@ export function Header() {
                   </Link>
                 </NavigationMenuLink>
               
-              </li>
+              
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
@@ -156,9 +156,9 @@ export function Header() {
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
-        <div className="ml-4 mt-2" onClick={() => router.push("/cart")}>
-          < i className="fa-solid fa-cart-arrow-down fa-xl"></i>
-        </div>
+        <NavigationMenuItem onClick={() => router.push("/cart")}>
+  <i className="fa-solid fa-cart-arrow-down fa-xl"></i>
+</NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
         </div>
