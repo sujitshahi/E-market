@@ -2,7 +2,7 @@ import {Card, CardHeader, CardBody, Image} from "@heroui/react";
 
 export default function Page() {
   return (
-    <div className=" grid grid-cols-4 gap-4 p-4 m-4 flex-wrap flex justify-center">
+    <div className=" grid grid-cols-4 gap-4 p-4 m-4 justify-center">
             <div className="border-2 w-[300px]">
                 <Card className="py-4">
         <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
