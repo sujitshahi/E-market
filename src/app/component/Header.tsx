@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { CircleCheckIcon, CircleHelpIcon, CircleIcon } from "lucide-react"
+import { useRouter } from "next/navigation";
 
 import {
   NavigationMenu,
@@ -15,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input" 
 import { Button } from "@/components/ui/button"
 
+
 const components: { title: string; href: string; description: string }[] = [
   {
     title: "Shirts",
@@ -23,7 +25,7 @@ const components: { title: string; href: string; description: string }[] = [
       "A modal dialog that interrupts the user with important content and expects a response.",
   },
   {
-    title: "pants",
+    title: "Pants",
     href: "/docs/primitives/hover-card",
     description:
       "For sighted users to preview content available behind a link.",
@@ -42,7 +44,7 @@ const components: { title: string; href: string; description: string }[] = [
 ]
 
 export function Header() {
-
+  const router = useRouter();
 
   return (
     <div className="border-b-4 flex items-center justify-between p-4 bg-blue-400">
@@ -53,6 +55,7 @@ export function Header() {
 
         <div className="flex gap-2">
             <Input className="w-[300px] border-2" type="search" placeholder="Search Here" />
+           
             <Button className="border-2">Search</Button>
         </div>
 
@@ -153,7 +156,7 @@ export function Header() {
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
-        <div className="ml-4 mt-2">
+        <div className="ml-4 mt-2" onClick={() => router.push("/cart")}>
           < i className="fa-solid fa-cart-arrow-down fa-xl"></i>
         </div>
       </NavigationMenuList>
