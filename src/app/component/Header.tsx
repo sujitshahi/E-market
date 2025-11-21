@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/navigation-menu"
 import { Input } from "@/components/ui/input" 
 import { Button } from "@/components/ui/button"
+import ThemeToggle from "./ThemeToggle";
 
 
 const components: { title: string; href: string; description: string }[] = [
@@ -46,7 +47,7 @@ export function Header() {
   const router = useRouter();
 
   return (
-    <div className="border-b-4 flex items-center justify-between p-4 bg-blue-400">
+    <div className="flex items-center justify-between p-4 bg-blue-400">
         <div className="flex items-center gap-2 text-4xl">
             <i className="fa-solid fa-bag-shopping text-red-400"></i>
             <h1 className="font-bold">SHOP</h1>
@@ -86,79 +87,76 @@ export function Header() {
         <NavigationMenuItem className="hidden md:block">
           <NavigationMenuTrigger className="text-xl">Women</NavigationMenuTrigger>
           <NavigationMenuContent className="bg-black text-white">
-            <ul className="grid w-[300px] gap-4">
-              
-                {components.map((component) => (
-                <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
-                >
-                  {component.description}
-                </ListItem>
-                ))}
+            
+            <ul className="grid grid-cols-2 w-[300px] gap-4">  
+              {components.map((component) => (
+              <ListItem
+                key={component.title}
+                title={component.title}
+                href={component.href}
+              >
+                {component.description}
+              </ListItem>
+              ))}
                 
-                <NavigationMenuLink asChild>
-                  <Link href="#">
-                    <div className="font-medium">Jewelery</div>
-                    <div className="text-muted-foreground">
-                      Learn how to use the library.
-                    </div>
-                  </Link>
-                </NavigationMenuLink>
-              
-              
+              <NavigationMenuLink asChild>
+                <Link href="#">
+                  <div className="font-medium">Jewelery</div>
+                  <div className="text-muted-foreground">
+                    Learn how to use the library.
+                  </div>
+                </Link>
+              </NavigationMenuLink>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
+
         <NavigationMenuItem className="hidden md:block">
           <NavigationMenuTrigger className="text-xl">Electronics</NavigationMenuTrigger>
           <NavigationMenuContent className="bg-black text-white">
-            <ul className="grid w-[200px] gap-4">
+            <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px]">
               <li>
                 <NavigationMenuLink asChild>
-                  <Link href="#">Mobile Phone</Link>
+                  <Link href="#" className="flex flex-col gap-1 py-2 px-3">
+                    <p className="text-xl font-medium">Mobile Phone</p>
+                    <p className="text-sm text-muted-foreground">
+                      Lorem ipsum dolor sit temporibus! Adipisci quaerat optio necessitatibus distinctio modi fugiat odio numquam minus!
+                    </p>
+                  </Link>
+                  
                 </NavigationMenuLink>
                 <NavigationMenuLink asChild>
-                  <Link href="#">Kitchen Appliances</Link>
-                </NavigationMenuLink>
-                <NavigationMenuLink asChild>
-                  <Link href="#">Home Appliances</Link>
-                </NavigationMenuLink>
-              </li>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem className="hidden md:block">
-          <NavigationMenuTrigger className="text-xl">New arrival</NavigationMenuTrigger>
-          <NavigationMenuContent className="bg-black text-white">
-            <ul className="grid w-[200px] gap-4">
-              <li>
-                <NavigationMenuLink asChild>
-                  <Link href="#" className="flex-row items-center gap-2">
-                    <CircleHelpIcon />
-                    Backlog
+                  <Link href="#" className="flex flex-col gap-1 py-2 px-3">
+                    <p className="text-xl font-medium">Kitchen Appliances</p>
+                    <p className="text-sm text-muted-foreground">
+                      Lorem ipsum dolor siti temporibus! Adipisci quaerat optio necessitatibus distinctio modi fugiat odio numquam minus!
+                    </p>
                   </Link>
                 </NavigationMenuLink>
+
                 <NavigationMenuLink asChild>
-                  <Link href="#" className="flex-row items-center gap-2">
-                    <CircleIcon />
-                    To Do
-                  </Link>
-                </NavigationMenuLink>
-                <NavigationMenuLink asChild>
-                  <Link href="#" className="flex-row items-center gap-2">
-                    <CircleCheckIcon />
-                    Done
+                  <Link href="#" className="flex flex-col gap-1 py-2 px-3">
+                    <p className="text-xl font-medium">Home Appliances</p>
+                    <p className="text-sm text-muted-foreground">
+                      Lorem ipsum dolor sit necessitatibus distinctio modi fugiat odio numquam minus!
+                    </p>
                   </Link>
                 </NavigationMenuLink>
               </li>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
+
+
         <NavigationMenuItem onClick={() => router.push("/cart")}>
-  <i className="fa-solid fa-cart-arrow-down fa-xl"></i>
-</NavigationMenuItem>
+          <i className="fa-solid fa-cart-arrow-down fa-xl"></i>
+        </NavigationMenuItem>
+
+        <nav className="p-4">
+           <h1 className="text-xl font-bold">Dark Mode</h1>
+            <ThemeToggle />
+         </nav>
+
       </NavigationMenuList>
     </NavigationMenu>
         </div>
