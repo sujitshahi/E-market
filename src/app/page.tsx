@@ -1,7 +1,8 @@
 "use client";
 
-import { Header } from "./features/component/Header";
-import HomePage from "./features/component/HomePage";
+import { Header } from "./component/Header";
+import HomePage from "./component/HomePage";
+
 
 
 

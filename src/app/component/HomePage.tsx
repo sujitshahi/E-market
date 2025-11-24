@@ -1,4 +1,5 @@
-import Page from "../product/page";
+import Page from "../features/product/page";
+
 
 
 
