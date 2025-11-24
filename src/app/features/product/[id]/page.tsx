@@ -13,6 +13,7 @@ interface Product {
   category: string
 }
 
+
 const allProducts: Product[] = [
   { id: 1, title: 'Nike Air Max', brand: 'Nike', price: 120, description: 'Comfortable running shoes', category: 'shoes', image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60' },
   { id: 2, title: 'Shirt', brand: 'Zara', price: 150, description: 'Stylish cotton shirt', category: 'clothing', image: 'https://images.unsplash.com/photo-1561053720-76cd73ff22c3?w=500&auto=format&fit=crop&q=60' },
@@ -22,11 +23,11 @@ const allProducts: Product[] = [
   { id: 6, title: 'Bags', brand: 'Gucci', price: 400, description: 'Elegant and spacious handbag designed for daily use with a modern style.', category: 'electronics', image: 'https://images.unsplash.com/photo-1559563458-527698bf5295?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bGFkaWVzJTIwYmFnc3xlbnwwfHwwfHx8MA%3D%3D' },
 
 ]
-
 export default function Page() {
   const router = useRouter()
   const params = useParams()
   const id = params.id
+
 
   const [cart, setCart] = useState<Product[]>([])
 
