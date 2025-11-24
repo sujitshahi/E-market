@@ -3,18 +3,11 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-interface Product {
-  title: string
-  brand: string
-  price: number
-  image: string
-}
 
 export default function Page() {
   const router = useRouter()
 
-
-  const [products] = useState<Product[]>([
+  const [products] = useState([
     {
       id: 1,
       title: 'Nike Air Max',
@@ -38,6 +31,30 @@ export default function Page() {
       price: 100,
       image:
         'https://images.unsplash.com/photo-1637069585336-827b298fe84a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8amVhbnN8ZW58MHx8MHx8fDA%3D'
+    },
+    {
+      id: 4,
+      title: 'headphones',
+      brand: 'sony',
+      price: 150,
+      image:
+        'https://plus.unsplash.com/premium_photo-1679513691474-73102089c117?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aGVhZHBob25lc3xlbnwwfHwwfHx8MA%3D%3D'
+    },
+    {
+      id: 5,
+      title: 'mobile phones',
+      brand: 'apple',
+      price: 400,
+      image:
+        'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bW9iaWxlfGVufDB8fDB8fHww'
+    },
+    {
+      id: 6,
+      title: 'Bags',
+      brand: 'Gucci',
+      price: 400,
+      image:
+        'https://images.unsplash.com/photo-1559563458-527698bf5295?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bGFkaWVzJTIwYmFnc3xlbnwwfHwwfHx8MA%3D%3D'
     }
   ])
 
