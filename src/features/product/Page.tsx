@@ -15,7 +15,7 @@ export default function Page() {
       <div className="p-8">
         <h1 className="text-3xl font-bold mb-6 flex justify-center">Welcome To The Shop</h1>
 
-        <div className="grid grid-cols-3 gap-6" onClick={() => router.push(`/productdetail`)}>
+        <div className="grid grid-cols-3 gap-6" onClick={() => router.push(`/features/productdetail/[id]/page.tsx`)}>
           {products.map((product) => (
             <div
               key={product.id}

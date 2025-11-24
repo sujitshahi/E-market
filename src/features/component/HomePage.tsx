@@ -1,7 +1,4 @@
-import Page from "../card/Page";
-
-
-
+import Page from "../product/Page";
 
 export default function HomePage() {
   return (
