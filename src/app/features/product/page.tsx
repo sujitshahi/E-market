@@ -1,12 +1,12 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 
 export default function Page() {
   const router = useRouter()
-
+    const [data, setData] = useState([]);
   const [products] = useState([
     {
       id: 1,

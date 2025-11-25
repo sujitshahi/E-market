@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/navigation-menu"
 import { Input } from "@/components/ui/input" 
 import { Button } from "@/components/ui/button"
-import ThemeToggle from "./ThemeToggle";
+
 
 
 const components: { title: string; href: string; description: string }[] = [
@@ -152,11 +152,7 @@ export function Header() {
           <i className="fa-solid fa-cart-arrow-down fa-xl"></i>
         </NavigationMenuItem>
 
-        <nav className="p-4">
-           <h1 className="text-xl font-bold">Dark Mode</h1>
-            <ThemeToggle />
-         </nav>
-
+        
       </NavigationMenuList>
     </NavigationMenu>
         </div>
