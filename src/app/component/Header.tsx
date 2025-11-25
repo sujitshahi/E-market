@@ -102,9 +102,7 @@ export function Header() {
               <NavigationMenuLink asChild>
                 <Link href="#">
                   <div className="font-medium">Jewelery</div>
-                  <div className="text-muted-foreground">
-                    Learn how to use the library.
-                  </div>
+                  
                 </Link>
               </NavigationMenuLink>
             </ul>
@@ -119,27 +117,21 @@ export function Header() {
                 <NavigationMenuLink asChild>
                   <Link href="#" className="flex flex-col gap-1 py-2 px-3">
                     <p className="text-xl font-medium">Mobile Phone</p>
-                    <p className="text-sm text-muted-foreground">
-                      Lorem ipsum dolor sit temporibus! Adipisci quaerat optio necessitatibus distinctio modi fugiat odio numquam minus!
-                    </p>
+                    
                   </Link>
                   
                 </NavigationMenuLink>
                 <NavigationMenuLink asChild>
                   <Link href="#" className="flex flex-col gap-1 py-2 px-3">
                     <p className="text-xl font-medium">Kitchen Appliances</p>
-                    <p className="text-sm text-muted-foreground">
-                      Lorem ipsum dolor siti temporibus! Adipisci quaerat optio necessitatibus distinctio modi fugiat odio numquam minus!
-                    </p>
+                    
                   </Link>
                 </NavigationMenuLink>
 
                 <NavigationMenuLink asChild>
                   <Link href="#" className="flex flex-col gap-1 py-2 px-3">
                     <p className="text-xl font-medium">Home Appliances</p>
-                    <p className="text-sm text-muted-foreground">
-                      Lorem ipsum dolor sit necessitatibus distinctio modi fugiat odio numquam minus!
-                    </p>
+                    
                   </Link>
                 </NavigationMenuLink>
               </li>

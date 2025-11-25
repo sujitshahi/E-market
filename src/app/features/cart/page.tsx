@@ -7,7 +7,7 @@ export default function Page() {
   const router = useRouter();
 
   const cart = [
-    { id: 1, title: "Product A", price: 19.99, qty: 2 },
+    { id: 1, title: "Product A", price: 19.99, qty: 1 },
     { id: 2, title: "Product B", price: 29.99, qty: 1 }
   ];
 
@@ -47,7 +47,6 @@ export default function Page() {
     </div>
   );
 }
-
 
 
 
