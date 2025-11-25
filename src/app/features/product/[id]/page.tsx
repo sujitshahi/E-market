@@ -27,8 +27,7 @@ export default function Page({ data }: any) {
   const router = useRouter()
   const params = useParams();
   const id = params.id
-
-
+  
   const product = products.find((p) => p.id === Number(id))
   if (!product) return <p>Product not found</p>
 

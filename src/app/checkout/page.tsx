@@ -47,7 +47,7 @@ export default function Page() {
         />
       </div>
 
-      <h2 className="text-xl mt-8 mb-2 font-semibold">Order Summary</h2>
+      
     
       <Button className="mt-4 w-full" onClick={handleSubmit}>
         Place Order

@@ -1,14 +1,10 @@
 "use client"
-
-import Link from "next/link"
-import { CircleCheckIcon, CircleHelpIcon, CircleIcon } from "lucide-react"
 import { useRouter } from "next/navigation";
 
 import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
@@ -16,159 +12,90 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
 
-
-const components: { title: string; href: string; description: string }[] = [
-  {
-    title: "Shirts",
-    href: "/docs/primitives/alert-dialog",
-    description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
-  },
-  {
-    title: "Pants",
-    href: "/docs/primitives/hover-card",
-    description:
-      "For sighted users to preview content available behind a link.",
-  },
-  {
-    title: "Watches",
-    href: "/docs/primitives/progress",
-    description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-  },
-  {
-    title: "Shoes",
-    href: "/docs/primitives/scroll-area",
-    description: "Visually or semantically separates content.",
-  }
-]
-
 export function Header() {
   const router = useRouter();
 
   return (
     <div className="flex items-center justify-between p-4 bg-blue-400">
-        <div className="flex items-center gap-2 text-4xl">
-            <i className="fa-solid fa-bag-shopping text-red-400"></i>
-            <h1 className="font-bold">SHOP</h1>
-        </div>
+      <div className="flex items-center gap-2 text-4xl">
+          <i className="fa-solid fa-bag-shopping text-red-400"></i>
+          <h1 className="font-bold">SHOP</h1>
+      </div>
 
-        <div className="flex gap-2">
-            <Input className="w-[300px] border-2" type="search" placeholder="Search Here" />
-           
-            <Button className="border-2">Search</Button>
-        </div>
-
-        <div>
-            <NavigationMenu >
-      <NavigationMenuList className="flex-wrap">
-        <NavigationMenuItem>
-        
-          <Button className="text-xl">Home</Button>
+      <div className="flex gap-2">
+          <Input className="w-[300px] border-2" type="search" placeholder="Search Here" />
           
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger className="text-xl">Men</NavigationMenuTrigger>
-          <NavigationMenuContent className="bg-black text-white">
-            <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-              {components.map((component) => (
-                <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
-                >
-                  {component.description}
-                </ListItem>
-              ))}
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        
-        <NavigationMenuItem className="hidden md:block">
-          <NavigationMenuTrigger className="text-xl">Women</NavigationMenuTrigger>
-          <NavigationMenuContent className="bg-black text-white">
+          <Button className="border-2">Search</Button>
+      </div>
+
+      <div>
+        <NavigationMenu >
+          <NavigationMenuList className="flex-wrap">
+            <NavigationMenuItem>
             
-            <ul className="grid grid-cols-2 w-[300px] gap-4">  
-              {components.map((component) => (
-              <ListItem
-                key={component.title}
-                title={component.title}
-                href={component.href}
-              >
-                {component.description}
-              </ListItem>
-              ))}
+              <Button className="text-xl">Home</Button>
+              
+            </NavigationMenuItem>
+
+            <NavigationMenuItem>
+              <NavigationMenuTrigger className="text-xl">Men</NavigationMenuTrigger>
+              <NavigationMenuContent className="bg-black text-white">
+
+                <ul className="grid gap-y-2 w-[300px]">
+
+                  <h1>Shirt</h1>
+                  <p>Lorem at eius repellendus id velit! Ipsum autem provident error quam excepturi!</p>
+                  <h1>Pants</h1>
+                  <p>Lorem at eius repellendus id velit! Ipsum autem provident error quam excepturi!</p>
+                  <h1>Watched</h1>
+                  <p>Lorem at eius repellendus id velit! Ipsum autem provident error quam excepturi!</p>
+                  <h1>Shoes</h1>
+                  <p>Lorem at eius repellendus id velit! Ipsum autem provident error quam excepturi!</p>
                 
-              <NavigationMenuLink asChild>
-                <Link href="#">
-                  <div className="font-medium">Jewelery</div>
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+            
+            <NavigationMenuItem className="hidden md:block">
+              <NavigationMenuTrigger className="text-xl">Women</NavigationMenuTrigger>
+              <NavigationMenuContent className="bg-black text-white">
+                
+                <ul className="grid w-[300px] gap-y-2">  
+
+                  <h1>Shirt</h1>
+                  <p>Lorem at eius repellendus id velit! Ipsum autem provident error quam excepturi!</p>
+                  <h1>Pants</h1>
+                  <p>Lorem at eius repellendus id velit! Ipsum autem provident error quam excepturi!</p>
+                  <h1>Watched</h1>
+                  <p>Lorem at eius repellendus id velit! Ipsum autem provident error quam excepturi!</p>
+                  <h1>Shoes</h1>
+                  <p>Lorem at eius repellendus id velit! Ipsum autem provident error quam excepturi!</p>
                   
-                </Link>
-              </NavigationMenuLink>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
 
-        <NavigationMenuItem className="hidden md:block">
-          <NavigationMenuTrigger className="text-xl">Electronics</NavigationMenuTrigger>
-          <NavigationMenuContent className="bg-black text-white">
-            <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-              <li>
-                <NavigationMenuLink asChild>
-                  <Link href="#" className="flex flex-col gap-1 py-2 px-3">
-                    <p className="text-xl font-medium">Mobile Phone</p>
-                    
-                  </Link>
-                  
-                </NavigationMenuLink>
-                <NavigationMenuLink asChild>
-                  <Link href="#" className="flex flex-col gap-1 py-2 px-3">
-                    <p className="text-xl font-medium">Kitchen Appliances</p>
-                    
-                  </Link>
-                </NavigationMenuLink>
-
-                <NavigationMenuLink asChild>
-                  <Link href="#" className="flex flex-col gap-1 py-2 px-3">
-                    <p className="text-xl font-medium">Home Appliances</p>
-                    
-                  </Link>
-                </NavigationMenuLink>
-              </li>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
+            <NavigationMenuItem className="hidden md:block">
+              <NavigationMenuTrigger className="text-xl">Electronics</NavigationMenuTrigger>
+              <NavigationMenuContent className="bg-black text-white">
+                <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                  <li>Mobile Phone</li>
+                  <li>Kitchen Appliances</li>
+                  <li>Headphones</li>
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
 
 
-        <NavigationMenuItem onClick={() => router.push(`/features/cart`)}>
-          <i className="fa-solid fa-cart-arrow-down fa-xl"></i>
-        </NavigationMenuItem>
+            <NavigationMenuItem onClick={() => router.push(`/features/cart`)}>
+              <i className="fa-solid fa-cart-arrow-down fa-xl"></i>
+            </NavigationMenuItem>
 
-        
-      </NavigationMenuList>
-    </NavigationMenu>
-        </div>
+            
+          </NavigationMenuList>
+        </NavigationMenu>
+      </div>
         
     </div>
-  )
-}
-
-function ListItem({
-  title,
-  children,
-  href,
-  ...props
-}: React.ComponentPropsWithoutRef<"li"> & { href: string }) {
-  return (
-    <li {...props}>
-      <NavigationMenuLink asChild>
-        <Link href={href}>
-          <div className="text-sm leading-none font-medium">{title}</div>
-          <p className="text-muted-foreground line-clamp-2 text-sm leading-snug">
-            {children}
-          </p>
-        </Link>
-      </NavigationMenuLink>
-    </li>
   )
 }

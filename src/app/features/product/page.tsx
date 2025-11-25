@@ -6,7 +6,8 @@ import { useState } from 'react'
 
 export default function Page() {
   const router = useRouter()
-    const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
+
   const [products] = useState([
     {
       id: 1,
