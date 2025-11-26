@@ -78,7 +78,7 @@ export default function Page() {
 
       <div className="space-y-4">
         {cart.map((item) => (
-          <div key={item.id} className="flex items-center justify-between bg-white shadow p-4 rounded-lg">
+          <div key={item.id} className="flex items-center justify-between bg-white shadow p-3 rounded-lg">
             <div className="flex items-center gap-4">
               <img 
                 src={item.image}
@@ -86,7 +86,7 @@ export default function Page() {
                 className="w-20 h-20 object-cover rounded"
               />
               <div>
-                <h2 className="text-lg font-semibold">{item.title}</h2>
+                <h2>{item.title}</h2>
                 <p className="text-gray-600">${item.price.toFixed(2)}</p>
               </div>
             </div>
@@ -97,7 +97,7 @@ export default function Page() {
                 disabled={item.qty === 1}
               >-</Button>
 
-              <span className="text-lg">{item.qty}</span>
+              <div>{item.qty}</div>
 
               <Button
                 onClick={() => updateQty(item.id, +1)}
@@ -105,11 +105,7 @@ export default function Page() {
               >+</Button>
             </div>
 
-            <div className="text-lg font-semibold">
-              ${(item.price * item.qty).toFixed(2)}
-            </div>
-
-            <Button variant="destructive" onClick={() => removeItem(item.id)}>
+            <Button variant="outline" className="text-red-950"  onClick={() => removeItem(item.id)}>
               Remove
             </Button>
           </div>
@@ -120,7 +116,7 @@ export default function Page() {
         <h2 className="text-2xl font-bold">Total: ${total.toFixed(2)}</h2>
         <Button
         onClick={() => router.push("/checkout")}
-         className="mt-4 w-full text-lg py-3">
+         className="mt-4 w-full text-lg py-3 cursor-pointer">
           Proceed to Checkout
         </Button>
       </div>

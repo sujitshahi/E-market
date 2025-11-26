@@ -31,7 +31,7 @@ export default function Page() {
   const product = products.find((p) => p.id === id);
   if (!product) return <p className="p-4">Product not found</p>;
 
-  const [qty, setQty] = useState(1);
+  const [qty, setQty] = useState(0);
 
   // --------------------------
   // FIXED ADD TO CART FUNCTION
@@ -61,7 +61,7 @@ export default function Page() {
       
       router.push("/cart"); // redirect to cart
     } catch (error) {
-      console.error("Error updating cart:", error);
+      console.error("Error adding to cart:", error);
     }
   };
 
@@ -81,31 +81,22 @@ export default function Page() {
             <p className="text-xl font-semibold mb-4">${(product.price * qty).toFixed(2)}</p>
             <p className="text-gray-700 mb-6">{product.description}</p>
 
-            {/* Quantity Selector */}
             <div className="flex items-center gap-3 mb-4">
-              <Button
-                onClick={() => qty > 1 && setQty(qty - 1)}
-                disabled={qty === 1}
-              >
+              <Button  onClick={() => qty > 1 && setQty(qty - 1)} disabled={qty === 0}>           
                 -
               </Button>
 
-              <span className="text-lg font-semibold">{qty}</span>
+              <div className="text-lg font-semibold">{qty}</div>
 
-              <Button
-                onClick={() => qty < 10 && setQty(qty + 1)}
-                disabled={qty === 10}
-              >
+              <Button onClick={() => qty < 10 && setQty(qty + 1)}disabled={qty === 10}>
                 +
               </Button>
             </div>
 
-            <Button
-              variant="outline"
-              onClick={handleAddToCart}
-            >
-              Add to Cart
+            <Button className='cursor-pointer' variant="outline" onClick={handleAddToCart}  disabled={qty === 0} >
+               Add to Cart
             </Button>
+
           </div>
         </div>
       </div>
