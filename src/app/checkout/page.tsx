@@ -103,11 +103,11 @@ export default function Page() {
     }
 
     // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(shippingAddress.email)) {
-      alert('Please enter a valid email address');
-      return false;
-    }
+    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // if (!emailRegex.test(shippingAddress.email)) {
+    //   alert('Please enter a valid email address');
+    //   return false;
+    // }
 
     return true;
   };
