@@ -87,7 +87,7 @@ export function Header() {
             </NavigationMenuItem>
 
 
-            <NavigationMenuItem onClick={() => router.push(`/features/cart`)}>
+            <NavigationMenuItem onClick={() => router.push(`/cart`)}>
               <i className="fa-solid fa-cart-arrow-down fa-xl"></i>
             </NavigationMenuItem>
 
