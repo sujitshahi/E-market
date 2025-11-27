@@ -3,7 +3,6 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-
 export default function Page() {
   const router = useRouter()
   const [data, setData] = useState([]);
@@ -60,10 +59,10 @@ export default function Page() {
   ])
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6 text-center">Welcome To The Shop</h1>
+    <div className="container mx-auto py-8">
+      <h1 className="text-3xl font-bold mb-6 text-center text-blue-400">Welcome To The Shop</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 cursor-pointer space-y-5">
         {products.map((product) => (
           <div
             key={product.id}

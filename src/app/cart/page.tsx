@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { useRouter } from 'next/navigation'
+import toast from 'react-hot-toast';
 
 export default function Page() {
   const router = useRouter();
@@ -20,22 +21,22 @@ export default function Page() {
     loadCart();
 
     // Listen for storage events (from other tabs/windows)
-    const handleStorageChange = () => {
-      loadCart();
-    };
+    // const handleStorageChange = () => {
+    //   loadCart();
+    // };
 
     // Listen for custom storage events (from same window)
-    const handleCustomStorageEvent = () => {
-      loadCart();
-    };
+    // const handleCustomStorageEvent = () => {
+    //   loadCart();
+    // };
 
-    window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('cartUpdated', handleCustomStorageEvent);
+    // window.addEventListener('storage', handleStorageChange);
+    // window.addEventListener('cartUpdated', handleCustomStorageEvent);
 
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('cartUpdated', handleCustomStorageEvent);
-    };
+    // return () => {
+      // window.removeEventListener('storage', handleStorageChange);
+      // window.removeEventListener('cartUpdated', handleCustomStorageEvent);
+    // };
   }, []);
 
   // FIXED: Recalculate total when cart changes
@@ -61,6 +62,7 @@ export default function Page() {
     setCart(newCart)
     localStorage.setItem("cart", JSON.stringify(newCart))
     window.dispatchEvent(new Event('storage'))
+    toast.success("Item removed from cart");
   }
 
   if (cart.length === 0) {
@@ -76,9 +78,9 @@ export default function Page() {
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
 
-      <div className="space-y-4">
+      <div className="text-black">
         {cart.map((item) => (
-          <div key={item.id} className="flex items-center justify-between bg-white shadow p-3 rounded-lg">
+          <div key={item.id} className="flex items-center justify-between bg-white shadow p-3">
             <div className="flex items-center gap-4">
               <img 
                 src={item.image}
@@ -87,12 +89,12 @@ export default function Page() {
               />
               <div>
                 <h2>{item.title}</h2>
-                <p className="text-gray-600">${item.price.toFixed(2)}</p>
+                <p className="text-gray-600">${item.price}</p>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              <Button
+             <Button
                 onClick={() => updateQty(item.id, -1)}
                 disabled={item.qty === 1}
               >-</Button>
@@ -102,24 +104,31 @@ export default function Page() {
               <Button
                 onClick={() => updateQty(item.id, +1)}
                 disabled={item.qty === 10}
-              >+</Button>
+              >+</Button> 
             </div>
 
             <Button variant="outline" className="text-red-950"  onClick={() => removeItem(item.id)}>
               Remove
             </Button>
+
+
+            
           </div>
         ))}
-      </div>
 
-      <div className="mt-8 p-4 bg-white shadow rounded-lg">
-        <h2 className="text-2xl font-bold">Total: ${total.toFixed(2)}</h2>
+
+
+        <div className=" p-4 bg-white shadow">
+        <h2 className="text-2xl font-bold">Total: ${total}</h2>
         <Button
         onClick={() => router.push("/checkout")}
          className="mt-4 w-full text-lg py-3 cursor-pointer">
           Proceed to Checkout
         </Button>
       </div>
+      </div>
+
+      
     </div>
   )
 }

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { useParams, useRouter } from 'next/navigation';
+import toast from 'react-hot-toast'
 
 interface Product {
   id: number;
@@ -36,7 +37,7 @@ export default function Page() {
   // --------------------------
   // FIXED ADD TO CART FUNCTION
   // --------------------------
-  const handleAddToCart = () => {
+  const addToCart = () => {
     try {
       const cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
@@ -55,19 +56,19 @@ export default function Page() {
       }
 
       localStorage.setItem("cart", JSON.stringify(cart));
-      
+      toast.success("Product added to cart");
       // Dispatch storage event to sync across tabs/components
-      window.dispatchEvent(new Event('storage'));
+      // window.dispatchEvent(new Event('storage'));
       
-      router.push("/cart"); // redirect to cart
+      router.push("/"); // redirect to cart
     } catch (error) {
       console.error("Error adding to cart:", error);
     }
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
+    <div className="mt-40 mx-auto">
+      <div className="max-w-4xl mx-auto bg-gray-500 shadow-md rounded-lg text-white">
         <div className="md:flex">
           <img
             src={product.image}
@@ -77,9 +78,9 @@ export default function Page() {
 
           <div className="p-6 md:w-1/2">
             <h1 className="text-2xl font-bold mb-2">{product.title}</h1>
-            <p className="text-sm text-gray-500 mb-2">Brand: {product.brand}</p>
+            <p className="text-sm mb-2">Brand: {product.brand}</p>
             <p className="text-xl font-semibold mb-4">${(product.price * qty).toFixed(2)}</p>
-            <p className="text-gray-700 mb-6">{product.description}</p>
+            <p className="mb-6">{product.description}</p>
 
             <div className="flex items-center gap-3 mb-4">
               <Button  onClick={() => qty > 1 && setQty(qty - 1)} disabled={qty === 0}>           
@@ -93,7 +94,7 @@ export default function Page() {
               </Button>
             </div>
 
-            <Button className='cursor-pointer' variant="outline" onClick={handleAddToCart}  disabled={qty === 0} >
+            <Button className='cursor-pointer' variant="outline" onClick={addToCart}  disabled={qty === 0} >
                Add to Cart
             </Button>
 

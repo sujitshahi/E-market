@@ -1,6 +1,5 @@
 "use client"
 import { useRouter } from "next/navigation";
-
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -10,7 +9,13 @@ import {
 } from "@/components/ui/navigation-menu"
 import { Input } from "@/components/ui/input" 
 import { Button } from "@/components/ui/button"
+import ThemeToggle from "./ThemeToggle";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 export function Header() {
   const router = useRouter();
@@ -23,18 +28,17 @@ export function Header() {
       </div>
 
       <div className="flex gap-2">
-          <Input className="w-[300px] border-2" type="search" placeholder="Search Here" />
+          <Input className="w-[350px] border-2" type="search" placeholder="Search Here" />
           
           <Button className="border-2">Search</Button>
       </div>
 
       <div>
         <NavigationMenu >
-          <NavigationMenuList className="flex-wrap">
-            <NavigationMenuItem>
+          <NavigationMenuList className="flex-wrap gap-5">
             
-              <Button className="text-xl">Home</Button>
-              
+            <NavigationMenuItem>
+              <Button className="text-xl">Home</Button>              
             </NavigationMenuItem>
 
             <NavigationMenuItem>
@@ -87,9 +91,19 @@ export function Header() {
             </NavigationMenuItem>
 
 
-            <NavigationMenuItem onClick={() => router.push(`/cart`)}>
-              <i className="fa-solid fa-cart-arrow-down fa-xl"></i>
-            </NavigationMenuItem>
+              <Tooltip>
+                <TooltipTrigger> 
+                  <NavigationMenuItem onClick={() => router.push(`/cart`)}>
+                    <i className="fa-solid fa-cart-arrow-down text-2xl cursor-pointer"></i>
+                  </NavigationMenuItem>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <h1 className="text-2xl text-w">Cart</h1>
+                </TooltipContent>
+              </Tooltip>
+           
+
+            <ThemeToggle />
 
             
           </NavigationMenuList>
