@@ -41,7 +41,6 @@ export default function Page() {
     const newCart = cart.filter(item => item.id !== id)
     setCart(newCart)
     localStorage.setItem("cart", JSON.stringify(newCart))
-    window.dispatchEvent(new Event('storage'))
     toast.success("Item removed from cart");
   }
 
@@ -49,7 +48,10 @@ export default function Page() {
     return (
       <div className="p-6 text-center text-xl font-semibold flex flex-col gap-4">
         Your cart is empty 🛒
-        <Button onClick={() => router.push("/order-summary")}>Shop Now</Button>
+        Looks like you haven't added anything to your cart yet.
+        <div>
+          <Button className="border-black border-2 font-bold cursor-pointer" onClick={() => router.push("/")}>Shop Now</Button>
+        </div>
       </div>      
     )
   }

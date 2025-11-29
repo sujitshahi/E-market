@@ -12,16 +12,16 @@ interface Product {
   price: number;
   description: string;
   image: string;
-  category: string;
+
 }
 
 const products: Product[] = [
-  { id: 1, title: 'Nike Air Max', brand: 'Nike', price: 120, description: 'Comfortable running shoes', category: 'shoes', image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60' },
-  { id: 2, title: 'Shirt', brand: 'Zara', price: 150, description: 'Stylish cotton shirt', category: 'clothing', image: 'https://images.unsplash.com/photo-1561053720-76cd73ff22c3?w=500&auto=format&fit=crop&q=60' },
-  { id: 3, title: 'Jeans', brand: 'Denim', price: 100, description: 'Classic blue jeans', category: 'clothing', image: 'https://images.unsplash.com/photo-1637069585336-827b298fe84a?w=500&auto=format&fit=crop&q=60' },
-  { id: 4, title: 'Headphones', brand: 'Sony', price: 150, description: 'High-quality headphones with rich sound.', category: 'electronics', image: 'https://plus.unsplash.com/premium_photo-1679513691474-73102089c117?w=500&auto=format&fit=crop&q=60' },
-  { id: 5, title: 'Mobile', brand: 'Apple', price: 400, description: 'Fast smartphone with long battery life.', category: 'electronics', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&auto=format&fit=crop&q=60' },
-  { id: 6, title: 'Bag', brand: 'Gucci', price: 400, description: 'Elegant handbag for daily use.', category: 'bags', image: 'https://images.unsplash.com/photo-1559563458-527698bf5295?w=500&auto=format&fit=crop&q=60' },
+  { id: 1, title: 'Nike Air Max', brand: 'Nike', price: 120, description: 'Comfortable running shoes', image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60' },
+  { id: 2, title: 'Shirt', brand: 'Zara', price: 150, description: 'Stylish cotton shirt', image: 'https://images.unsplash.com/photo-1561053720-76cd73ff22c3?w=500&auto=format&fit=crop&q=60' },
+  { id: 3, title: 'Jeans', brand: 'Denim', price: 100, description: 'Classic blue jeans', image: 'https://images.unsplash.com/photo-1637069585336-827b298fe84a?w=500&auto=format&fit=crop&q=60' },
+  { id: 4, title: 'Headphones', brand: 'Sony', price: 150, description: 'High-quality headphones with rich sound.', image: 'https://plus.unsplash.com/premium_photo-1679513691474-73102089c117?w=500&auto=format&fit=crop&q=60' },
+  { id: 5, title: 'Mobile', brand: 'Apple', price: 400, description: 'Fast smartphone with long battery life.', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&auto=format&fit=crop&q=60' },
+  { id: 6, title: 'Bag', brand: 'Gucci', price: 400, description: 'Elegant handbag for daily use.', image: 'https://images.unsplash.com/photo-1559563458-527698bf5295?w=500&auto=format&fit=crop&q=60' },
 ];
 
 export default function Page() {
@@ -37,7 +37,6 @@ export default function Page() {
   const addToCart = () => {
     try {
       const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-
       const existingItem = cart.find((item: any) => item.id === product.id);
 
       if (existingItem) {

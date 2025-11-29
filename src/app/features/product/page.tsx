@@ -34,7 +34,7 @@ export default function Page() {
     {
       id: 4,
       title: 'Headphones',
-      brand: 'sony',
+      brand: 'Sony',
       price: 150,
       image:
         'https://plus.unsplash.com/premium_photo-1679513691474-73102089c117?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aGVhZHBob25lc3xlbnwwfHwwfHx8MA%3D%3D'
@@ -42,7 +42,7 @@ export default function Page() {
     {
       id: 5,
       title: 'Mobile',
-      brand: 'apple',
+      brand: 'Apple',
       price: 400,
       image:
         'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bW9iaWxlfGVufDB8fDB8fHww'
