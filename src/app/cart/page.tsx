@@ -10,36 +10,16 @@ export default function Page() {
   const [cart, setCart] = useState<any[]>([])
   const [total, setTotal] = useState(0)
 
-  // FIXED: Load cart from localStorage and listen for storage events
+
   useEffect(() => {
     const loadCart = () => {
       const storedCart = JSON.parse(localStorage.getItem("cart") || "[]")
       setCart(storedCart)
     };
-
-    // Load cart on component mount
     loadCart();
-
-    // Listen for storage events (from other tabs/windows)
-    // const handleStorageChange = () => {
-    //   loadCart();
-    // };
-
-    // Listen for custom storage events (from same window)
-    // const handleCustomStorageEvent = () => {
-    //   loadCart();
-    // };
-
-    // window.addEventListener('storage', handleStorageChange);
-    // window.addEventListener('cartUpdated', handleCustomStorageEvent);
-
-    // return () => {
-      // window.removeEventListener('storage', handleStorageChange);
-      // window.removeEventListener('cartUpdated', handleCustomStorageEvent);
-    // };
   }, []);
 
-  // FIXED: Recalculate total when cart changes
+
   useEffect(() => {
     const newTotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0)
     setTotal(newTotal)
@@ -67,20 +47,20 @@ export default function Page() {
 
   if (cart.length === 0) {
     return (
-      <div className="p-6 text-center text-xl font-semibold">
+      <div className="p-6 text-center text-xl font-semibold flex flex-col gap-4">
         Your cart is empty 🛒
-      </div>
+      </div>      
     )
   }
 
-
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
+    <div className="container mx-auto p-4 text-black font-bold ">
+      <h1 className="text-3xl font-bold mb-6 text-gray-500">Your Cart</h1>
 
-      <div className="text-black">
+      <div>
+        
         {cart.map((item) => (
-          <div key={item.id} className="flex items-center justify-between bg-white shadow p-3">
+          <div key={item.id} className="flex items-center justify-between shadow p-3 bg-gray-500 ">
             <div className="flex items-center gap-4">
               <img 
                 src={item.image}
@@ -89,7 +69,7 @@ export default function Page() {
               />
               <div>
                 <h2>{item.title}</h2>
-                <p className="text-gray-600">${item.price}</p>
+                <p className="">${item.price}</p>
               </div>
             </div>
 
@@ -107,25 +87,22 @@ export default function Page() {
               >+</Button> 
             </div>
 
-            <Button variant="outline" className="text-red-950"  onClick={() => removeItem(item.id)}>
+            <Button variant="outline" className="balck"  onClick={() => removeItem(item.id)}>
               Remove
             </Button>
-
-
-            
           </div>
         ))}
 
 
 
-        <div className=" p-4 bg-white shadow">
-        <h2 className="text-2xl font-bold">Total: ${total}</h2>
-        <Button
-        onClick={() => router.push("/checkout")}
-         className="mt-4 w-full text-lg py-3 cursor-pointer">
-          Proceed to Checkout
-        </Button>
-      </div>
+        <div className=" p-4 bg-gray-500">
+          <h2 className="text-2xl font-bold">Total: ${total}</h2>
+          <Button
+          onClick={() => router.push("/checkout")}
+          className="mt-4 w-full text-lg py-3 cursor-pointer">
+            Proceed to Checkout
+          </Button>
+        </div>
       </div>
 
       

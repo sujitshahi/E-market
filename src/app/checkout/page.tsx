@@ -21,16 +21,13 @@ export default function Page() {
   const router = useRouter();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [total, setTotal] = useState(0);
-  // const [isProcessing, setIsProcessing] = useState(false);
-  
 
-  // Load cart from localStorage
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
     setCart(storedCart);
   }, []);
 
-  // Calculate totals
+
   useEffect(() => {
     const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
     setTotal(subtotal);
@@ -45,7 +42,7 @@ export default function Page() {
       router.push("/cart");
     } catch (error) {
       toast.error("Failed to place order.");
-      // setIsProcessing(false);
+
     }
   };
 

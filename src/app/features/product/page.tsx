@@ -5,7 +5,6 @@ import { useState } from 'react'
 
 export default function Page() {
   const router = useRouter()
-  const [data, setData] = useState([]);
 
   const [products] = useState([
     {
@@ -34,7 +33,7 @@ export default function Page() {
     },
     {
       id: 4,
-      title: 'headphones',
+      title: 'Headphones',
       brand: 'sony',
       price: 150,
       image:
@@ -42,7 +41,7 @@ export default function Page() {
     },
     {
       id: 5,
-      title: 'mobile phones',
+      title: 'Mobile',
       brand: 'apple',
       price: 400,
       image:

@@ -46,16 +46,10 @@ export function Header() {
               <NavigationMenuContent className="bg-black text-white">
 
                 <ul className="grid gap-y-2 w-[300px]">
-
-                  <h1>Shirt</h1>
-                  <p>Lorem at eius repellendus id velit! Ipsum autem provident error quam excepturi!</p>
-                  <h1>Pants</h1>
-                  <p>Lorem at eius repellendus id velit! Ipsum autem provident error quam excepturi!</p>
-                  <h1>Watched</h1>
-                  <p>Lorem at eius repellendus id velit! Ipsum autem provident error quam excepturi!</p>
-                  <h1>Shoes</h1>
-                  <p>Lorem at eius repellendus id velit! Ipsum autem provident error quam excepturi!</p>
-                
+                  <a href="">Shirt</a>
+                  <a href="">Pants</a>
+                  <a href="">Watch</a>
+                  <a href="">Shoes</a>             
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
@@ -66,14 +60,12 @@ export function Header() {
                 
                 <ul className="grid w-[300px] gap-y-2">  
 
-                  <h1>Shirt</h1>
-                  <p>Lorem at eius repellendus id velit! Ipsum autem provident error quam excepturi!</p>
-                  <h1>Pants</h1>
-                  <p>Lorem at eius repellendus id velit! Ipsum autem provident error quam excepturi!</p>
-                  <h1>Watched</h1>
-                  <p>Lorem at eius repellendus id velit! Ipsum autem provident error quam excepturi!</p>
-                  <h1>Shoes</h1>
-                  <p>Lorem at eius repellendus id velit! Ipsum autem provident error quam excepturi!</p>
+                 <a href="">Shirt</a>
+                  <a href="">Pants</a>
+                  <a href="">Watch</a>
+                  <a href="">Shoes</a>    
+                  <a href="">Bag</a>
+                  <a href="">Jewellery</a>
                   
                 </ul>
               </NavigationMenuContent>
@@ -82,10 +74,9 @@ export function Header() {
             <NavigationMenuItem className="hidden md:block">
               <NavigationMenuTrigger className="text-xl">Electronics</NavigationMenuTrigger>
               <NavigationMenuContent className="bg-black text-white">
-                <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                  <li>Mobile Phone</li>
-                  <li>Kitchen Appliances</li>
-                  <li>Headphones</li>
+                <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-1 lg:w-[600px]">
+                  <a href="">Mobile</a>
+                  <a href="">Headphone</a>
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
