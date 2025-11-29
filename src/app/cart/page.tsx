@@ -49,6 +49,7 @@ export default function Page() {
     return (
       <div className="p-6 text-center text-xl font-semibold flex flex-col gap-4">
         Your cart is empty 🛒
+        <Button onClick={() => router.push("/order-summary")}>Shop Now</Button>
       </div>      
     )
   }
