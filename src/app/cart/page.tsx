@@ -10,7 +10,6 @@ export default function Page() {
   const [cart, setCart] = useState<any[]>([])
   const [total, setTotal] = useState(0)
 
-
   useEffect(() => {
     const loadCart = () => {
       const storedCart = JSON.parse(localStorage.getItem("cart") || "[]")
@@ -18,7 +17,6 @@ export default function Page() {
     };
     loadCart();
   }, []);
-
 
   useEffect(() => {
     const newTotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0)
@@ -77,20 +75,18 @@ export default function Page() {
             </div>
 
             <div className="flex items-center gap-3">
-             <Button
-                onClick={() => updateQty(item.id, -1)}
-                disabled={item.qty === 1}
-              >-</Button>
+             <Button onClick={() => updateQty(item.id, -1)} disabled={item.qty === 1} >
+                -
+              </Button>
 
               <div>{item.qty}</div>
 
-              <Button
-                onClick={() => updateQty(item.id, +1)}
-                disabled={item.qty === 10}
-              >+</Button> 
+              <Button onClick={() => updateQty(item.id, +1)} disabled={item.qty === 10} >
+                +            
+              </Button> 
             </div>
 
-            <Button variant="outline" className="balck"  onClick={() => removeItem(item.id)}>
+            <Button variant="outline" className="black cursor-pointer" onClick={() => removeItem(item.id)}>
               Remove
             </Button>
           </div>
@@ -107,8 +103,6 @@ export default function Page() {
           </Button>
         </div>
       </div>
-
-      
     </div>
   )
 }

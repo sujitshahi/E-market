@@ -63,12 +63,7 @@ export default function Page() {
     <div className="mt-25 mx-auto">
       <div className="max-w-4xl mx-auto bg-gray-500 shadow-md rounded-lg text-white">
         <div className="md:flex">
-          <img
-            src={product.image}
-            alt={product.title}
-            className="w-full md:w-1/2 object-cover"
-          />
-
+          <img  src={product.image} alt={product.title}  className="w-full md:w-1/2 object-cover" />
           <div className="p-6 md:w-1/2">
             <h1 className="text-2xl font-bold mb-2">{product.title}</h1>
             <p className="text-sm mb-2">Brand: {product.brand}</p>

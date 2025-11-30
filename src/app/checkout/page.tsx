@@ -142,7 +142,7 @@ export default function Page() {
                 </div>
               </div>
 
-              <Button variant="outline" className="w-full mt-6 text-lg py-3 cursor-pointer" onClick={handlePlaceOrder}>
+              <Button variant="outline" className="w-full mt-6 text-lg py-3 cursor-pointer" onClick={handlePlaceOrder} disabled={cart.length === 0}>
                 Confirm Order
               </Button>
 

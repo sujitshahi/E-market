@@ -60,19 +60,10 @@ export default function Page() {
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-6 text-center text-blue-400">Welcome To The Shop</h1>
-
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 cursor-pointer space-y-5">
         {products.map((product) => (
-          <div
-            key={product.id}
-            className="rounded-lg p-4 hover:shadow-lg"
-            onClick={() => router.push(`/features/product/${product.id}`)}
-          >
-            <img
-              src={product.image}
-              alt={product.title}
-              className="w-full h-48 object-cover mb-2 rounded"
-            />
+          <div key={product.id} className="rounded-lg p-4 hover:shadow-lg" onClick={() => router.push(`/features/product/${product.id}`)} >
+            <img src={product.image}  alt={product.title} className="w-full h-48 object-cover mb-2 rounded" />
             <h2 className="font-semibold text-lg">{product.title}</h2>
             <p className="text-gray-600 font-bold">Brand: {product.brand}</p>
             <p className="text-gray-800 font-bold">Price: ${product.price}</p>
