@@ -54,7 +54,7 @@ export default function OrderSummaryPage() {
         <div className="text-center py-12">
           <h1 className="text-3xl font-bold mb-4">No Orders Yet</h1>
           <p className="text-gray-600 mb-6">You haven't placed any orders yet.</p>
-          <Button className='border-2' onClick={() => router.push("/")}>Continue Shopping</Button>
+          <Button className="border-2 cursor-pointer" onClick={() => router.push("/")}>Continue Shopping</Button>
         </div>
       </div>
     );
@@ -65,10 +65,10 @@ export default function OrderSummaryPage() {
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Order Summary</h1>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => router.push("/cart")}>
+          <Button className='cursor-pointer border-2' variant="outline" onClick={() => router.push("/cart")}>
             Back to Cart
           </Button>
-          <Button onClick={() => router.push("/")}>
+          <Button className='cursor-pointer border-2' onClick={() => router.push("/")}>
             Continue Shopping
           </Button>
         </div>
@@ -209,3 +209,4 @@ export default function OrderSummaryPage() {
     </div>
   );
 }
+

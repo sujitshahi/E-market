@@ -1,125 +1,3 @@
-// 'use client'
-
-// import { useRouter } from 'next/navigation'
-// import { useState } from 'react'
-
-// export default function Page() {
-//   const router = useRouter()
-
-//   const [products] = useState([
-//     {
-//       id: 1,
-//       title: 'Nike Air Max',
-//       brand: 'Nike',
-//       price: 120,
-//       image:
-//         'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c2hvZXN8ZW58MHx8MHx8fDA%3D'
-//     },
-//     {
-//       id: 2,
-//       title: 'Shirt',
-//       brand: 'Zara',
-//       price: 150,
-//       image:
-//         'https://images.unsplash.com/photo-1561053720-76cd73ff22c3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8c2hpcnRzfGVufDB8fDB8fHww'
-//     },
-//     {
-//       id: 3,
-//       title: 'Jeans',
-//       brand: 'Denim',
-//       price: 100,
-//       image:
-//         'https://images.unsplash.com/photo-1637069585336-827b298fe84a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8amVhbnN8ZW58MHx8MHx8fDA%3D'
-//     },
-//     {
-//       id: 4,
-//       title: 'Headphones',
-//       brand: 'Sony',
-//       price: 150,
-//       image:
-//         'https://plus.unsplash.com/premium_photo-1679513691474-73102089c117?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aGVhZHBob25lc3xlbnwwfHwwfHx8MA%3D%3D'
-//     },
-//     {
-//       id: 5,
-//       title: 'Mobile',
-//       brand: 'Apple',
-//       price: 400,
-//       image:
-//         'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bW9iaWxlfGVufDB8fDB8fHww'
-//     },
-//     {
-//       id: 6,
-//       title: 'Bags',
-//       brand: 'Gucci',
-//       price: 400,
-//       image:
-//         'https://images.unsplash.com/photo-1559563458-527698bf5295?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bGFkaWVzJTIwYmFnc3xlbnwwfHwwfHx8MA%3D%3D'
-//     }
-//   ])
-
-//   return (
-//     <div className="container mx-auto py-8">
-//       <h1 className="text-3xl font-bold mb-6 text-center text-blue-400">Welcome To The Shop</h1>
-//       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 cursor-pointer space-y-5">
-//         {products.map((product) => (
-//           <div key={product.id} className="rounded-lg p-4 hover:shadow-lg" onClick={() => router.push(`/features/product/${product.id}`)} >
-//             <img src={product.image}  alt={product.title} className="w-full h-48 object-cover mb-2 rounded" />
-//             <h2 className="font-semibold text-lg">{product.title}</h2>
-//             <p className="text-gray-600 font-bold">Brand: {product.brand}</p>
-//             <p className="text-gray-800 font-bold">Price: ${product.price}</p>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   )
-// }
-
-
-// 'use client'
-
-// import { useRouter } from 'next/navigation'
-// import { useState, useEffect } from 'react'
-
-// type Product = {
-//   id: number
-//   title: string
-//   brand: string
-//   price: number
-//   images: string[]
-//   thumbnail?: string
-// }
-
-// export default function Page() {
-//   const router = useRouter()
-//   const [products, setProducts] = useState<Product[]>([])
-
-//   useEffect(() => {
-//     fetch('https://dummyjson.com/products')
-//       .then(res => res.json())
-//       .then(data => setProducts(data.products))
-//       .catch(err => console.error(err));
-//   }, []);
-
-//   return (
-//     <div className="container mx-auto py-8 p-4">
-//       <h1 className="text-3xl font-bold mb-6 text-center text-blue-400">Welcome To The Shop</h1>
-//       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 cursor-pointer space-y-5">
-//         {products.map((product) => (
-//           <div key={product.id} className="rounded-lg p-4 hover:shadow-lg" onClick={() => router.push(`/features/product/${product.id}`)} >
-//             <img src={product.images?.[0] ?? product.thumbnail ?? ''}  alt={product.title} className="w-full h-48 object-cover mb-2 rounded" />
-//             <h2 className="font-semibold text-lg">{product.title}</h2>
-//             <p className="text-gray-600 font-bold">Brand: {product.brand}</p>
-//             <p className="text-gray-800 font-bold">Price: ${product.price}</p>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   )
-// }
-
-
-
-
 'use client'
 
 import { useRouter } from 'next/navigation'
@@ -130,6 +8,7 @@ type Product = {
   title: string
   brand: string
   price: number
+  category: string
   images: string[]
   thumbnail?: string
   rating: number
@@ -139,57 +18,125 @@ type Product = {
 export default function Page() {
   const router = useRouter()
   const [products, setProducts] = useState<Product[]>([])
-  const [sortBy, setSortBy] = useState<'default' | 'price-low' | 'price-high' | 'popularity'>('default')
+  const [sortBy] = useState<'default' | 'price-low' | 'price-high' | 'popularity'>('default')
+
+  const [categoryFilter, setCategoryFilter] = useState('')
+  const [brandFilter, setBrandFilter] = useState('')
+  const [priceFilter, setPriceFilter] = useState<'low' | 'high' | ''>('')
+
+  const [categories, setCategories] = useState<string[]>([])
+  const [brands, setBrands] = useState<string[]>([])
 
   useEffect(() => {
     fetch('https://dummyjson.com/products')
       .then(res => res.json())
-      .then(data => setProducts(data.products))
-      .catch(err => console.error(err));
-  }, []);
+      .then(data => {
+        setProducts(data.products)
 
+        const allCategories = data.products.map((product: Product) => product.category)
+        const uniqueCategories = Array.from(new Set(allCategories)) as string[]
+        
+        const allBrands = data.products.map((product: Product) => product.brand)
+        const uniqueBrands = Array.from(new Set(allBrands)) as string[]
 
-  const getSortedProducts = () => {
-    const productsCopy = [...products];
+        setCategories(uniqueCategories)
+        setBrands(uniqueBrands)
+      })
+      .catch(err => console.error(err))
+  }, [])
+
+  const getFilteredProducts = () => {
+    let list = [...products]
+
+    if (categoryFilter) list = list.filter(p => p.category === categoryFilter)
+    if (brandFilter) list = list.filter(p => p.brand === brandFilter)
+
+    if (priceFilter === 'low') list = list.sort((a, b) => a.price - b.price)
+    else if (priceFilter === 'high') list = list.sort((a, b) => b.price - a.price)
+
     
     switch (sortBy) {
       case 'price-low':
-        return productsCopy.sort((a, b) => a.price - b.price);
+        return list.sort((a, b) => a.price - b.price)
       case 'price-high':
-        return productsCopy.sort((a, b) => b.price - a.price);
+        return list.sort((a, b) => b.price - a.price)
       case 'popularity':
-        return productsCopy.sort((a, b) => b.rating - a.rating);
+        return list.sort((a, b) => b.rating - a.rating)
       default:
-        return productsCopy;
+        return list
     }
   }
 
-  const sortedProducts = getSortedProducts();
+  const displayedProducts = getFilteredProducts()
+
+  const navCategories = ['All', 'Men', 'Women', 'Electronics']
 
   return (
     <div className="container mx-auto py-8 p-4">
       <h1 className="text-3xl font-bold mb-4 text-center text-blue-400">Our Featured Products</h1>
-      
-      <div className="mb-6 flex justify-end">
-        <div className="flex items-center space-x-2">
-          {/* <label className="text-blue-400 font-medium">Sort by:</label>
-          <select 
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
-            className="border-2 text-blue-900 rounded-lg px-4 py-2 focus:outline-none"
+
+      <div className="flex justify-center space-x-4 mb-6">
+        {navCategories.map(cat => (
+          <button
+            key={cat}
+            className={`px-4 py-2 rounded-lg font-medium ${
+              categoryFilter === cat.toLowerCase() || (cat === 'All' && categoryFilter === '')
+                ? 'bg-blue-400 text-white'
+                : 'bg-gray-200 text-gray-700'
+            }`}
+            onClick={() => setCategoryFilter(cat === 'All' ? '' : cat.toLowerCase())}
           >
-            <option value="default">Default</option>
-            <option value="price-low">Price: Low to High</option>
-            <option value="price-high">Price: High to Low</option>
-            <option value="popularity">Popularity (Rating)</option>
-          </select> */}
-        </div>
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      <div className="flex flex-wrap mb-6 gap-4">
+        <select
+          className="border-2 text-blue-900 rounded-lg px-4 py-2 focus:outline-none"
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+        >
+          <option value="">All Categories</option>
+          {categories.map((cat, idx) => (
+            <option key={idx} value={cat}>{cat}</option>
+          ))}
+        </select>
+
+        <select
+          className="border-2 text-blue-900 rounded-lg px-4 py-2 focus:outline-none"
+          value={brandFilter}
+          onChange={(e) => setBrandFilter(e.target.value)}
+        >
+          <option value="">All Brands</option>
+          {brands.map((brand, idx) => (
+            <option key={idx} value={brand}>{brand}</option>
+          ))}
+        </select>
+
+        <select
+          className="border-2 text-blue-900 rounded-lg px-4 py-2 focus:outline-none"
+          value={priceFilter}
+          onChange={(e) => setPriceFilter(e.target.value as any)}
+        >
+          <option value="">Sort By Price</option>
+          <option value="low">Low → High</option>
+          <option value="high">High → Low</option>
+        </select>
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 cursor-pointer space-y-5">
-        {sortedProducts.map((product) => (
-          <div key={product.id} className="rounded-lg p-4 hover:shadow-lg border border-gray-200" onClick={() => router.push(`/features/product/${product.id}`)} >
-            <img src={product.images?.[0] ?? product.thumbnail ?? ''}  alt={product.title} className="w-full h-48 object-cover mb-2 rounded" />
+        {displayedProducts.map(product => (
+          <div
+            key={product.id}
+            className="rounded-lg p-4 hover:shadow-lg border border-gray-200"
+            onClick={() => router.push(`/features/product/${product.id}`)}
+          >
+            <img
+              src={product.images?.[0] ?? product.thumbnail ?? ''}
+              alt={product.title}
+              className="w-full h-48 object-cover mb-2 rounded"
+            />
             <h2 className="font-semibold text-lg">{product.title}</h2>
             <p className="text-gray-600 font-bold">Brand: {product.brand}</p>
             <div className="flex justify-between items-center">
@@ -202,6 +149,12 @@ export default function Page() {
           </div>
         ))}
       </div>
+
+      {displayedProducts.length === 0 && (
+        <p className="text-center text-gray-500 mt-10 text-lg">
+          No products found with current filters.
+        </p>
+      )}
     </div>
   )
 }

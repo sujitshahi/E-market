@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -36,9 +34,7 @@ interface OrderHistory {
 const schema = yup.object({
   firstName: yup.string().required(),
   lastName: yup.string().required(),
-  email: yup.string().matches(
-    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-    "Invalid email format").email().required(),
+  email: yup.string().email().required(),
   phone: yup.string().required(),
   address: yup.string().required(),
   paymentMethod: yup.string().required(),
@@ -64,6 +60,22 @@ export default function Page() {
   const [errors, setErrors] = useState<any>({});
 
   useEffect(() => {
+    const validateEmail = async () => {
+      try {
+        await schema.validateAt("email", { email: formData.email });
+        setErrors((prev: any) => ({ ...prev, email: "" }));
+      } catch (err: any) {
+        setErrors((prev: any) => ({ ...prev, email: err.message }));
+      }
+    };
+
+    if (formData.email.trim() !== "") {
+      validateEmail();
+    }
+  }, [formData.email]);
+
+
+  useEffect(() => {
     const saved = localStorage.getItem("cart");
     if (saved) {
       try {
@@ -73,7 +85,6 @@ export default function Page() {
       }
     }
 
-    // Load order history from localStorage
     const savedOrders = localStorage.getItem("orderHistory");
     if (savedOrders) {
       try {
@@ -92,7 +103,6 @@ export default function Page() {
   const handlePlaceOrder = async () => {
     try {
       await schema.validate(formData, { abortEarly: false });
-
 
       const order: OrderHistory = {
         id: `ORD-${Date.now()}`,
@@ -113,16 +123,13 @@ export default function Page() {
         paymentMethod: formData.paymentMethod,
       };
 
-  
       const updatedHistory = [order, ...orderHistory];
       setOrderHistory(updatedHistory);
       localStorage.setItem("orderHistory", JSON.stringify(updatedHistory));
 
-      // Clear cart
       localStorage.removeItem("cart");
       setCart([]);
-      
-      // Show success and order history
+
       toast.success("Order placed successfully!");
       setShowOrderHistory(true);
 
