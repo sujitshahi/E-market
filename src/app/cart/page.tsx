@@ -48,7 +48,7 @@ export default function Page() {
         Your cart is empty 🛒
         Looks like you haven't added anything to your cart yet.
         <div>
-          <Button className="border-black border-2 font-bold cursor-pointer" onClick={() => router.push("/")}>Shop Now</Button>
+          <Button className="border-black border-2 font-bold cursor-pointer" onClick={() => router.push("/order-summary")}>Your Order</Button>
         </div>
       </div>      
     )

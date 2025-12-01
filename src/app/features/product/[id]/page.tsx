@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { useParams, useRouter } from 'next/navigation';
 import toast from 'react-hot-toast'
@@ -12,29 +12,69 @@ interface Product {
   price: number;
   description: string;
   image: string;
-
+  thumbnail: string;
+  category?: string;
 }
 
-const products: Product[] = [
-  { id: 1, title: 'Nike Air Max', brand: 'Nike', price: 120, description: 'Comfortable running shoes', image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60' },
-  { id: 2, title: 'Shirt', brand: 'Zara', price: 150, description: 'Stylish cotton shirt', image: 'https://images.unsplash.com/photo-1561053720-76cd73ff22c3?w=500&auto=format&fit=crop&q=60' },
-  { id: 3, title: 'Jeans', brand: 'Denim', price: 100, description: 'Classic blue jeans', image: 'https://images.unsplash.com/photo-1637069585336-827b298fe84a?w=500&auto=format&fit=crop&q=60' },
-  { id: 4, title: 'Headphones', brand: 'Sony', price: 150, description: 'High-quality headphones with rich sound.', image: 'https://plus.unsplash.com/premium_photo-1679513691474-73102089c117?w=500&auto=format&fit=crop&q=60' },
-  { id: 5, title: 'Mobile', brand: 'Apple', price: 400, description: 'Fast smartphone with long battery life.', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&auto=format&fit=crop&q=60' },
-  { id: 6, title: 'Bag', brand: 'Gucci', price: 400, description: 'Elegant handbag for daily use.', image: 'https://images.unsplash.com/photo-1559563458-527698bf5295?w=500&auto=format&fit=crop&q=60' },
-];
+interface SimilarProduct {
+  id: number;
+  title: string;
+  brand: string;
+  price: number;
+  thumbnail: string;
+}
 
 export default function Page() {
   const router = useRouter();
   const params = useParams();
   const id = Number(params.id);
 
-  const product = products.find((p) => p.id === id);
-  if (!product) return <p className="p-4">Product not found</p>;
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [similarProducts, setSimilarProducts] = useState<SimilarProduct[]>([]);
+
+  useEffect(() => {
+    if (id) {
+      fetch(`https://dummyjson.com/products/${id}`)
+        .then(res => res.json())
+        .then(data => {
+         
+          setProduct({
+            id: data.id,
+            title: data.title,
+            brand: data.brand,
+            price: data.price,
+            description: data.description,
+            image: data.thumbnail,
+            thumbnail: data.thumbnail
+          });
+          setLoading(false);
+
+          fetch('https://dummyjson.com/products')
+            .then(res => res.json())
+            .then(allProducts => {
+              const otherProducts = allProducts.products.filter((p: any) => p.id !== data.id);
+              const randomProducts = [...otherProducts]
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 4)
+                .map((p: any) => ({
+                  id: p.id,
+                  title: p.title,
+                  brand: p.brand,
+                  price: p.price,
+                  thumbnail: p.thumbnail
+                }));
+              setSimilarProducts(randomProducts);
+            });
+        });
+    }
+  }, [id]);
 
   const [qty, setQty] = useState(0);
 
   const addToCart = () => {
+    if (!product) return;
+
     try {
       const cart = JSON.parse(localStorage.getItem("cart") || "[]");
       const existingItem = cart.find((item: any) => item.id === product.id);
@@ -59,9 +99,15 @@ export default function Page() {
     }
   };
 
+  if (loading) {
+    return <p className="p-4">Loading...</p>;
+  }
+
+  if (!product) return <p className="p-4">Product not found</p>;
+
   return (
     <div className="mt-25 mx-auto">
-      <div className="max-w-4xl mx-auto bg-gray-500 shadow-md rounded-lg text-white">
+      <div className="max-w-4xl mx-auto bg-gray-500 shadow-md rounded-lg text-white mb-8">
         <div className="md:flex">
           <img  src={product.image} alt={product.title}  className="w-full md:w-1/2 object-cover" />
           <div className="p-6 md:w-1/2">
@@ -89,10 +135,31 @@ export default function Page() {
           </div>
         </div>
       </div>
+
+    
+      {similarProducts.length > 0 && (
+        <div className="max-w-4xl mx-auto mt-8">
+          <h2 className="text-2xl font-bold mb-6 text-center text-blue-400">Similar Items</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            {similarProducts.map((similarProduct) => (
+              <div 
+                key={similarProduct.id} 
+                className="rounded-lg p-4 hover:shadow-lg bg-gray-500 text-white cursor-pointer"
+                onClick={() => router.push(`/features/product/${similarProduct.id}`)}
+              >
+                <img 
+                  src={similarProduct.thumbnail}  
+                  alt={similarProduct.title} 
+                  className="w-full h-48 object-cover mb-2 rounded" 
+                />
+                <h3 className="font-semibold text-lg">{similarProduct.title}</h3>
+                <p className="text-gray-300 font-bold">Brand: {similarProduct.brand}</p>
+                <p className="text-white font-bold">Price: ${similarProduct.price}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
-
-
-
-
   );
 }
