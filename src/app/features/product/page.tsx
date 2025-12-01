@@ -168,11 +168,11 @@ export default function Page() {
 
   return (
     <div className="container mx-auto py-8 p-4">
-      <h1 className="text-3xl font-bold mb-6 text-center text-blue-400">Welcome To The Shop</h1>
+      <h1 className="text-3xl font-bold mb-4 text-center text-blue-400">Our Featured Products</h1>
       
       <div className="mb-6 flex justify-end">
         <div className="flex items-center space-x-2">
-          <label className="text-blue-400 font-medium">Sort by:</label>
+          {/* <label className="text-blue-400 font-medium">Sort by:</label>
           <select 
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
@@ -182,7 +182,7 @@ export default function Page() {
             <option value="price-low">Price: Low to High</option>
             <option value="price-high">Price: High to Low</option>
             <option value="popularity">Popularity (Rating)</option>
-          </select>
+          </select> */}
         </div>
       </div>
 
