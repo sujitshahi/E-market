@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import toast from 'react-hot-toast';
+import * as yup from "yup";
 
 interface CartItem {
   id: number;
@@ -17,74 +18,165 @@ interface CartItem {
   qty: number;
 }
 
+const schema = yup.object({
+  firstName: yup.string().required(),
+  lastName: yup.string().required(),
+  email: yup.string().required(),
+  phone: yup.string().required(),
+  address: yup.string().required(),
+  paymentMethod: yup.string(),
+});
+
 export default function Page() {
+
   const router = useRouter();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [total, setTotal] = useState(0);
 
+ 
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    address: "",
+    paymentMethod: "",
+  });
+
+ const [errors, setErrors] = useState<any>({});
+
   useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
-    setCart(storedCart);
+    const saved = localStorage.getItem("cart");
+    if (saved) {
+      try {
+        setCart(JSON.parse(saved));
+      } catch (err) {
+        console.log("cart load error", err);
+      }
+    }
   }, []);
 
 
   useEffect(() => {
-    const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
-    setTotal(subtotal);
-  }, [cart,]);
+    const t = cart.reduce((s, item) => s + item.price * item.qty, 0);
+    setTotal(t);
+  }, [cart]);
 
 
-  const handlePlaceOrder = async () => {   
+  const handlePlaceOrder = async () => {
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await schema.validate(formData, { abortEarly: false });
+
+ 
+      await new Promise(res => setTimeout(res));
+
       localStorage.removeItem("cart");
       toast.success("Order placed successfully!");
       router.push("/cart");
-    } catch (error) {
-      toast.error("Failed to place order.");
 
+    } catch (err: any) {
+      const collected: any = {};
+      if (err.inner) {
+        err.inner.forEach((e: any) => {
+          collected[e.path] = e.message;
+        });
+      }
+      setErrors(collected);
+      toast.error("All fields are required.");
     }
   };
 
- 
   return (
     <div className="container mx-auto p-6 max-w-6xl">
       <h1 className="text-3xl font-bold mb-8">Checkout</h1>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
         <div className="space-y-6">
 
           <Card>
             <CardHeader>
               <CardTitle>Information</CardTitle>
             </CardHeader>
+
             <CardContent className="space-y-4">
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>First Name.</Label>
-                  <Input type="firstName" placeholder="First Name" />
-                </div>
 
                 <div className="space-y-2">
-                  <Label>Last Name.</Label>
-                  <Input type="lastName" placeholder="Last Name" />
+                  <Label>First Name</Label>
+                  <Input
+                    placeholder="First Name"
+                    value={formData.firstName}
+                    onChange={(e) =>
+                      setFormData(prev => ({ ...prev, firstName: e.target.value }))
+                    }
+                  />
+                  {errors.firstName && (
+                    <p className="text-red-500 text-sm">{errors.firstName}</p>
+                  )}
                 </div>
+               
+                <div className="space-y-2">
+                  <Label>Last Name</Label>
+                  <Input
+                    placeholder="Last Name"
+                    value={formData.lastName}
+                    onChange={(e) =>
+                      setFormData(prev => ({ ...prev, lastName: e.target.value }))
+                    }
+                  />
+                  {errors.lastName && (
+                    <p className="text-red-500 text-sm">{errors.lastName}</p>
+                  )}
+                </div>
+
+              </div>
+          
+              <div className="space-y-2">
+                <Label>Email</Label>
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData(prev => ({ ...prev, email: e.target.value }))
+                  }
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm">{errors.email}</p>
+                )}
+              </div>
+
+           
+              <div className="space-y-2">
+                <Label>Phone</Label>
+                <Input
+                  placeholder="Phone"
+                  value={formData.phone}
+                  onChange={(e) =>
+                    setFormData(prev => ({ ...prev, phone: e.target.value }))
+                  }
+                />
+                {errors.phone && (
+                  <p className="text-red-500 text-sm">{errors.phone}</p>
+                )}
               </div>
 
               <div className="space-y-2">
-                <Label>Email.</Label>
-                <Input type="email" placeholder="Email" />              
+                <Label>Address</Label>
+                <Input
+                  placeholder="Address"
+                  value={formData.address}
+                  onChange={(e) =>
+                    setFormData(prev => ({ ...prev, address: e.target.value }))
+                  }
+                />
+                {errors.address && (
+                  <p className="text-red-500 text-sm">{errors.address}</p>
+                )}
               </div>
 
-              <div className="space-y-2">
-                <Label>Phone.</Label>
-                <Input type="phone" placeholder="Phone" />              
-              </div>
-
-              <div className="space-y-2">
-                <Label>Address. </Label>
-                <Input type="address" placeholder="Address" />
-              </div>
             </CardContent>
           </Card>
 
@@ -92,31 +184,42 @@ export default function Page() {
             <CardHeader>
               <CardTitle>Payment Method</CardTitle>
             </CardHeader>
+
             <CardContent>
-              <RadioGroup>
-                <div className="flex items-center space-x-2 mb-4">
+              <RadioGroup
+                onValueChange={(val) =>
+                  setFormData(prev => ({ ...prev, paymentMethod: val }))
+                }
+              >
+                <div className="flex items-center gap-2 mb-4">
                   <RadioGroupItem value="e-sewa" id="e-sewa" />
-                  <Label>E-sewa</Label>
+                  <Label htmlFor="e-sewa">E-sewa</Label>
                 </div>
-                <div className="flex items-center space-x-2">
+
+                <div className="flex items-center gap-2">
                   <RadioGroupItem value="khalti" id="khalti" />
-                  <Label>Khalti</Label>
+                  <Label htmlFor="khalti">Khalti</Label>
                 </div>
               </RadioGroup>
+
+              {errors.paymentMethod && (
+                <p className="text-red-500 text-sm mt-2">{errors.paymentMethod}</p>
+              )}
             </CardContent>
           </Card>
         </div>
-
 
         <div className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>Order Summary</CardTitle>
             </CardHeader>
+
             <CardContent>
               <div className="space-y-4">
-                {cart.map((item) => (
-                  <div key={item.id} className="flex items-center justify-between">
+                {cart.map(item => (
+                  <div key={item.id} className="flex justify-between items-center">
+
                     <div className="flex items-center gap-3">
                       <img
                         src={item.image}
@@ -128,35 +231,41 @@ export default function Page() {
                         <p className="text-sm text-gray-600">Qty: {item.qty}</p>
                       </div>
                     </div>
-                    <p className="font-semibold">
-                      ${item.price * item.qty}
-                    </p>
+
+                    <p className="font-semibold">${item.price * item.qty}</p>
                   </div>
                 ))}
               </div>
 
               <div className="mt-4 pt-4 space-y-2">
-                  <div className="flex justify-between text-lg font-bold border-t pt-2">
-                  <div>Total</div>
-                  <div>${total}</div>
+                <div className="flex justify-between text-lg font-bold border-t pt-2">
+                  <span>Total</span>
+                  <span>${total}</span>
                 </div>
               </div>
-
-              <Button variant="outline" className="w-full mt-6 text-lg py-3 cursor-pointer" onClick={handlePlaceOrder} disabled={cart.length === 0}>
+           
+              <Button
+                variant="outline"
+                className="w-full mt-6 text-lg py-3"
+                onClick={handlePlaceOrder}
+                disabled={cart.length === 0}
+              >
                 Confirm Order
               </Button>
 
-              <Button variant="outline" className="w-full mt-2 cursor-pointer"onClick={() => router.push("/cart")}>
+              <Button
+                variant="outline"
+                className="w-full mt-2"
+                onClick={() => router.push("/cart")}
+              >
                 Back to Cart
               </Button>
+
             </CardContent>
           </Card>
-
-          
         </div>
+
       </div>
     </div>
   );
 }
-
-
