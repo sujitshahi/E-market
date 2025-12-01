@@ -34,6 +34,7 @@ export default function Page() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [similarProducts, setSimilarProducts] = useState<SimilarProduct[]>([]);
+  const [qty, setQty] = useState(0);
 
   useEffect(() => {
     if (id) {
@@ -51,39 +52,37 @@ export default function Page() {
           });
           setLoading(false);
 
+          // for similar products
           fetch('https://dummyjson.com/products')
-  .then(res => res.json())
-  .then(allProducts => {
-
-    const currentProduct = allProducts.products.find((p: any) => p.id === data.id);
-    
-    if (!currentProduct) {
-      setSimilarProducts([]);
-      return;
-    }
-    
-      const similar = allProducts.products
-      .filter((p: any) => 
-        p.category === currentProduct.category && 
-        p.id !== data.id
-      )
-      .slice(0, 4) 
-      .map((p: any) => ({
-        id: p.id,
-        title: p.title,
-        brand: p.brand,
-        price: p.price,
-        thumbnail: p.thumbnail,
-        category: p.category
-      }));
-    
-    setSimilarProducts(similar);
-  });
+            .then(res => res.json())
+            .then(allProducts => {
+              const currentProduct = allProducts.products.find((p: any) => p.id === data.id);
+              
+              if (!currentProduct) {
+                setSimilarProducts([]);
+                return;
+              }
+              
+              const similar = allProducts.products
+                .filter((p: any) => 
+                  p.category === currentProduct.category && 
+                  p.id !== data.id
+                )
+                .slice(0, 4)
+                .map((p: any) => ({
+                  id: p.id,
+                  title: p.title,
+                  brand: p.brand,
+                  price: p.price,
+                  thumbnail: p.thumbnail,
+                  category: p.category
+                }));
+              
+              setSimilarProducts(similar);
+            });
         });
     }
   }, [id]);
-
-  const [qty, setQty] = useState(0);
 
   const addToCart = () => {
     if (!product) return;
@@ -112,6 +111,31 @@ export default function Page() {
     }
   };
 
+  const buyNow = () => {
+    if (!product || qty === 0) return;
+
+    try {
+     
+      const checkoutItem = {
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        image: product.image,
+        qty: qty,
+        total: product.price * qty
+      };
+
+      
+      localStorage.setItem("checkoutItem", JSON.stringify(checkoutItem));
+      
+      
+      router.push("/checkout");
+    } catch (error) {
+      console.error("Error preparing checkout:", error);
+      toast.error("Error preparing checkout");
+    }
+  };
+
   if (loading) {
     return (
       <>
@@ -134,7 +158,6 @@ export default function Page() {
 
   return (
     <>
-    
       <Header />
 
       <div className="mt-25 mx-auto">
@@ -161,12 +184,12 @@ export default function Page() {
 
               <div className='space-x-3'>
                 <Button className='cursor-pointer' variant="outline" onClick={addToCart} disabled={qty === 0}>
-                Add to Cart
-              </Button>
+                  Add to Cart
+                </Button>
 
-              <Button className='cursor-pointer' variant="outline" onClick={() => router.push("/checkout")} disabled={qty === 0}>
-                Buy
-              </Button>
+                <Button className='cursor-pointer' variant="outline" onClick={buyNow} disabled={qty === 0}>
+                  Buy
+                </Button>
               </div>
 
             </div>
@@ -202,3 +225,6 @@ export default function Page() {
     </>
   );
 }
+
+
+

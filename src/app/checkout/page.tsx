@@ -18,6 +18,15 @@ interface CartItem {
   qty: number;
 }
 
+interface BuyNowItem {
+  id: number;
+  title: string;
+  price: number;
+  image: string;
+  qty: number;
+  total: number;
+}
+
 interface OrderHistory {
   id: string;
   date: string;
@@ -41,14 +50,15 @@ const schema = yup.object({
 });
 
 export default function Page() {
-
-  const router = useRouter();
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [total, setTotal] = useState(0);
-  const [orderHistory, setOrderHistory] = useState<OrderHistory[]>([]);
+  const router = useRouter();  
+  const [cart, setCart] = useState<CartItem[]>([]); 
+  const [buyNowItem, setBuyNowItem] = useState<BuyNowItem | null>(null); 
+  const [total, setTotal] = useState(0); 
+  const [orderHistory, setOrderHistory] = useState<OrderHistory[]>([]); 
   const [showOrderHistory, setShowOrderHistory] = useState(false);
-
-  const [formData, setFormData] = useState({
+  const [errors, setErrors] = useState<any>({}); 
+   
+   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
@@ -57,7 +67,7 @@ export default function Page() {
     paymentMethod: "",
   });
 
-  const [errors, setErrors] = useState<any>({});
+ 
 
   useEffect(() => {
     const validateEmail = async () => {
@@ -74,46 +84,74 @@ export default function Page() {
     }
   }, [formData.email]);
 
-
+ 
   useEffect(() => {
-    const saved = localStorage.getItem("cart");
-    if (saved) {
+   
+    const savedBuyNowItem = localStorage.getItem("checkoutItem");
+    if (savedBuyNowItem) {
       try {
-        setCart(JSON.parse(saved));
+        setBuyNowItem(JSON.parse(savedBuyNowItem));
+        localStorage.removeItem("checkoutItem");
       } catch (err) {
-        console.log("cart load error", err);
+        console.log("Error loading buy now item:", err);
       }
     }
 
+   
+    const savedCart = localStorage.getItem("cart");
+    if (savedCart) {
+      try {
+        setCart(JSON.parse(savedCart));
+      } catch (err) {
+        console.log("Error loading cart:", err);
+      }
+    }
+
+   
     const savedOrders = localStorage.getItem("orderHistory");
     if (savedOrders) {
       try {
         setOrderHistory(JSON.parse(savedOrders));
       } catch (err) {
-        console.log("order history load error", err);
+        console.log("Error loading order history:", err);
       }
     }
   }, []);
 
+
   useEffect(() => {
-    const t = cart.reduce((s, item) => s + item.price * item.qty, 0);
-    setTotal(t);
-  }, [cart]);
+    if (buyNowItem) {
+      setTotal(buyNowItem.total);
+    } else {
+      
+      const t = cart.reduce((s, item) => s + item.price * item.qty, 0);
+      setTotal(t);
+    }
+  }, [cart, buyNowItem]);
+
 
   const handlePlaceOrder = async () => {
-    try {
+    try {    
       await schema.validate(formData, { abortEarly: false });
+      let orderItems: CartItem[] = [];
+      
+      if (buyNowItem) {    
+        orderItems = [{
+          id: buyNowItem.id,
+          title: buyNowItem.title,
+          price: buyNowItem.price,
+          image: buyNowItem.image,
+          qty: buyNowItem.qty
+        }];
+      } else {       
+        orderItems = [...cart];
+      }
+
 
       const order: OrderHistory = {
         id: `ORD-${Date.now()}`,
-        date: new Date().toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        }),
-        items: [...cart],
+        date: new Date().toLocaleString(),
+        items: orderItems,
         total: total,
         firstName: formData.firstName,
         lastName: formData.lastName,
@@ -127,13 +165,17 @@ export default function Page() {
       setOrderHistory(updatedHistory);
       localStorage.setItem("orderHistory", JSON.stringify(updatedHistory));
 
-      localStorage.removeItem("cart");
-      setCart([]);
+      if (buyNowItem) {
+        setBuyNowItem(null);
+      } else {
+        localStorage.removeItem("cart");
+        setCart([]);
+      }
 
       toast.success("Order placed successfully!");
       setShowOrderHistory(true);
 
-    } catch (err: any) {
+    } catch (err: any) { 
       const collected: any = {};
       if (err.inner) {
         err.inner.forEach((e: any) => {
@@ -141,7 +183,7 @@ export default function Page() {
         });
       }
       setErrors(collected);
-      toast.error("All fields are required.");
+      toast.error("Please fill all fields correctly.");
     }
   };
 
@@ -174,14 +216,7 @@ export default function Page() {
               {orderHistory.length > 0 && orderHistory[0] && (
                 <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
                   <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-sm text-gray-600">Order ID</p>
-                      <p className="font-semibold">{orderHistory[0].id}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Date</p>
-                      <p className="font-semibold">{orderHistory[0].date}</p>
-                    </div>
+                 
                     <div>
                       <p className="text-sm text-gray-600">Customer</p>
                       <p className="font-semibold">{orderHistory[0].firstName} {orderHistory[0].lastName}</p>
@@ -207,54 +242,30 @@ export default function Page() {
                             <p className="text-sm text-gray-600">Qty: {item.qty}</p>
                           </div>
                         </div>
-                        <p className="font-semibold">${item.price * item.qty}</p>
+                        <p className="font-semibold">${(item.price * item.qty).toFixed(2)}</p>
                       </div>
                     ))}
                   </div>
                   
                   <div className="border-t pt-4">
                     <div className="flex justify-between text-lg font-bold">
-                      <span>Total Amount</span>
-                      <span>${orderHistory[0].total}</span>
+                      <div>Total Amount</div>
+                      <div>${orderHistory[0].total.toFixed(2)}</div>
                     </div>
                   </div>
                 </div>
               )}
             </CardContent>
           </Card>
-
-          {orderHistory.length > 1 && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Previous Orders</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {orderHistory.slice(1).map((order) => (
-                    <div key={order.id} className="p-4 border rounded-lg">
-                      <div className="flex justify-between items-center mb-2">
-                        <div>
-                          <p className="font-semibold">{order.id}</p>
-                          <p className="text-sm text-gray-600">{order.date}</p>
-                        </div>
-                        <p className="font-bold">${order.total}</p>
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        {order.items.length} item(s) · {order.paymentMethod}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
         </div>
       ) : (
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+         
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Information</CardTitle>
+                <CardTitle>Customer Information</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
@@ -303,7 +314,7 @@ export default function Page() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Phone</Label>
+                  <Label>Phone Number</Label>
                   <Input
                     placeholder="Phone"
                     value={formData.phone}
@@ -360,7 +371,7 @@ export default function Page() {
             </Card>
           </div>
 
-          <div className="space-y-6">
+            <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle>Order Summary</CardTitle>
@@ -368,43 +379,62 @@ export default function Page() {
 
               <CardContent>
                 <div className="space-y-4">
-                  {cart.map(item => (
-                    <div key={item.id} className="flex justify-between items-center">
+                  {buyNowItem ? (                 
+                    <div key={buyNowItem.id} className="flex justify-between items-center">
                       <div className="flex items-center gap-3">
                         <img
-                          src={item.image}
-                          alt={item.title}
+                          src={buyNowItem.image}
+                          alt={buyNowItem.title}
                           className="w-12 h-12 object-cover rounded"
                         />
                         <div>
-                          <p className="font-medium">{item.title}</p>
-                          <p className="text-sm text-gray-600">Qty: {item.qty}</p>
+                          <p className="font-medium">{buyNowItem.title}</p>
+                          <p className="text-sm text-gray-600">Qty: {buyNowItem.qty}</p>
+                          
                         </div>
                       </div>
-                      <p className="font-semibold">${item.price * item.qty}</p>
+                      <p className="font-semibold">${buyNowItem.total.toFixed(2)}</p>
                     </div>
-                  ))}
+                  ) : (
+                    
+                    cart.map(item => (
+                      <div key={item.id} className="flex justify-between items-center">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={item.image}
+                            alt={item.title}
+                            className="w-12 h-12 object-cover rounded"
+                          />
+                          <div>
+                            <p className="font-medium">{item.title}</p>
+                            <p className="text-sm text-gray-600">Qty: {item.qty}</p>
+                          </div>
+                        </div>
+                        <p className="font-semibold">${(item.price * item.qty).toFixed(2)}</p>
+                      </div>
+                    ))
+                  )}
                 </div>
-
+            
                 <div className="mt-4 pt-4 space-y-2">
                   <div className="flex justify-between text-lg font-bold border-t pt-2">
-                    <span>Total</span>
-                    <span>${total.toFixed(2)}</span>
+                    <div>Total Amount</div>
+                    <div>${total.toFixed(2)}</div>
                   </div>
-                </div>
-              
+                </div>              
+            
                 <Button
                   variant="outline"
-                  className="w-full mt-6 text-lg py-3"
-                  onClick={handlePlaceOrder}
-                  disabled={cart.length === 0}
+                  className="w-full mt-6 text-lg py-3 cursor-pointer"
+                  onClick={handlePlaceOrder}                 
+                  disabled={buyNowItem ? false : cart.length === 0}
                 >
                   Confirm Order
                 </Button>
 
                 <Button
                   variant="outline"
-                  className="w-full mt-2"
+                  className="w-full mt-2 cursor-pointer"
                   onClick={() => router.push("/cart")}
                 >
                   Back to Cart

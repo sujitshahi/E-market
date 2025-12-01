@@ -1,7 +1,7 @@
 'use client';
 interface ErrorProps {
-  error: Error & { digest?: string }; // built-in Next.js error type
-  reset: () => void; // function to reset the error boundary
+  error: Error & { digest?: string }; 
+  reset: () => void; 
 }
 
 export default function error({ error, reset }: ErrorProps) {

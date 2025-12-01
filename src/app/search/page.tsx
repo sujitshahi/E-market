@@ -4,7 +4,6 @@ import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from "@/components/ui/button";
 import { Header } from '@/app/component/Header';
 import Footer from '@/app/component/Footer';
 
@@ -94,8 +93,6 @@ function SearchContent() {
 
   return (
     <div className="min-h-screen">
-
-
       <div className="max-w-7xl mx-auto p-4">
         {hasSearched ? (
           products.length > 0 ? (
@@ -107,11 +104,11 @@ function SearchContent() {
                     className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
                     onClick={() => router.push(`/features/product/${product.id}`)}
                   >
-                    <div className="aspect-square overflow-hidden">
+                    <div>
                       <img
                         src={product.thumbnail}
                         alt={product.title}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-cover transition-transform"
                       />
                     </div>
                     <div className="p-4">
@@ -121,8 +118,10 @@ function SearchContent() {
                         </div>
                        
                       </div>
-                      <h3 className="font-semibold text-lg mb-2 line-clamp-2">{product.title}</h3>
-                      <p className="text-sm text-gray-600 mb-3 line-clamp-2">{product.description}</p>
+                      <h3 className="font-semibold text-lg mb-2">{product.title}</h3>
+                      <p className="text-sm text-gray-600 mb-3">{product.description}</p>
+                      <p>Price: ${product.price}</p>
+                      <p>Stock: {product.stock}pc Left</p>
                       
                     </div>
                   </div>
@@ -137,29 +136,7 @@ function SearchContent() {
             </div>
           )
         ) : (
-          <div className="text-center py-16">
-            <i className="fa-solid fa-magnifying-glass text-5xl text-gray-300 mb-4"></i>
-            <h2 className="text-2xl font-bold text-gray-700 mb-2">Start Searching</h2>
-            <p className="text-gray-600 mb-6">
-              Enter a product name, brand, or category in the search bar above
-            </p>
-            <div className="max-w-2xl mx-auto">
-              <h3 className="font-semibold mb-4">Popular Searches:</h3>
-              <div className="flex flex-wrap gap-2 justify-center">
-                {['iPhone', 'Laptop', 'Skincare', 'Furniture', 'Shoes', 'Watch', 'Headphones', 'Books'].map((term) => (
-                  <Button
-                    key={term}
-                    variant="outline"
-                    size="sm"
-                    onClick={() => router.push(`/search?query=${term}`)}
-                    className="rounded-full"
-                  >
-                    {term}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </div>
+          <div> </div>
         )}
       </div>
     </div>

@@ -32,7 +32,7 @@ export default function Page() {
     
     setCart(updatedCart)
     localStorage.setItem("cart", JSON.stringify(updatedCart))
-    window.dispatchEvent(new Event('storage'))
+   
   }
 
   const removeItem = (id: number) => {
@@ -47,8 +47,9 @@ export default function Page() {
       <div className="p-6 text-center text-xl font-semibold flex flex-col gap-4">
         Your cart is empty 🛒
         Looks like you haven't added anything to your cart yet.
-        <div>
+        <div className="space-x-4">
           <Button className="border-black border-2 font-bold cursor-pointer" onClick={() => router.push("/order-summary")}>Your Order</Button>
+          <Button className="border-black border-2 font-bold cursor-pointer" onClick={() => router.push("/")}>Continue Shopping</Button>
         </div>
       </div>      
     )
@@ -91,9 +92,7 @@ export default function Page() {
             </Button>
           </div>
         ))}
-
-
-
+        
         <div className=" p-4 bg-gray-500">
           <h2 className="text-2xl font-bold">Total: ${total}</h2>
           <Button

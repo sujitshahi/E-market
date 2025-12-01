@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent} from "@/components/ui/card";
 import { useRouter } from 'next/navigation';
 
 interface OrderItem {
@@ -14,8 +14,7 @@ interface OrderItem {
 }
 
 interface OrderHistory {
-  id: string;
-  date: string;
+  id: number | string;
   items: OrderItem[];
   total: number;
   firstName: string;
@@ -50,10 +49,9 @@ export default function OrderSummaryPage() {
 
   if (orderHistory.length === 0) {
     return (
-      <div className="container mx-auto p-6">
-        <div className="text-center py-12">
+      <div className="mx-auto p-6">
+        <div className="text-center">
           <h1 className="text-3xl font-bold mb-4">No Orders Yet</h1>
-          <p className="text-gray-600 mb-6">You haven't placed any orders yet.</p>
           <Button className="border-2 cursor-pointer" onClick={() => router.push("/")}>Continue Shopping</Button>
         </div>
       </div>
@@ -65,38 +63,19 @@ export default function OrderSummaryPage() {
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Order Summary</h1>
         <div className="flex gap-2">
-          <Button className='cursor-pointer border-2' variant="outline" onClick={() => router.push("/cart")}>
+          <Button className='cursor-pointer' variant="outline"onClick={() => router.push("/cart")}>
             Back to Cart
           </Button>
-          <Button className='cursor-pointer border-2' onClick={() => router.push("/")}>
+          <Button className='cursor-pointer' variant="outline" onClick={() => router.push("/")}>
             Continue Shopping
           </Button>
         </div>
       </div>
 
-      <div className="space-y-6">
+      <div className="">
         {orderHistory.map((order) => (
-          <Card key={order.id} className="border-2">
-            <CardHeader className="">
-              <div className="flex justify-between items-center">
-                <div>
-                  <CardTitle className="flex items-center gap-2">
-                    Order #{order.id}
-                    <span className="text-sm font-normal bg-green-100 text-green-800 px-2 py-1 rounded">
-                      Completed
-                    </span>
-                  </CardTitle>
-                  <p className="text-sm text-gray-600 mt-1">{order.date}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-2xl font-bold">${order.total}</p>
-                  <p className="text-sm text-gray-600">{order.items.length} item(s)</p>
-                </div>
-              </div>
-            </CardHeader>
-            
+          <Card key={order.id}  className="border-2">            
             <CardContent>
-           
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 p-4 rounded-lg">
                 <div>
                   <h3 className="font-semibold mb-2">Customer Information</h3>
@@ -117,7 +96,7 @@ export default function OrderSummaryPage() {
               <h3 className="font-semibold mb-4">Order Items</h3>
               <div className="space-y-3">
                 {order.items.map((item) => (
-                  <div key={item.id} className="flex justify-between items-center p-3 border rounded">
+                  <div key={item.id} className="flex justify-between items-center p-3">
                     <div className="flex items-center gap-3">
                       <img
                         src={item.image}
@@ -138,40 +117,10 @@ export default function OrderSummaryPage() {
               </div>
 
               
-              <div className="mt-6 pt-4 border-t">
+              <div className="mt-6 pt-4">
                 <div className="flex justify-between items-center">
-                  <div>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => {
-                        
-                        const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-                        const newCart = [...cart];
-                        
-                        order.items.forEach(orderItem => {
-                          const existingItem = newCart.find(item => item.id === orderItem.id);
-                          if (existingItem) {
-                            existingItem.qty += orderItem.qty;
-                          } else {
-                            newCart.push(orderItem);
-                          }
-                        });
-                        
-                        localStorage.setItem("cart", JSON.stringify(newCart));
-                        router.push("/cart");
-                      }}
-                    >
-                      Re-order
-                    </Button>
-                  </div>
-                  <div className="text-right">
-                    <div className="flex justify-between mb-1">
-                      <div className="text-gray-600">Subtotal:</div>
-                      <div>${order.total}</div>
-                    </div>
-                   
-                    <div className="flex justify-between text-lg font-bold border-t pt-2 mt-2">
+                  <div className="text-right">                   
+                    <div className="flex justify-between text-lg font-bold pt-2 mt-2">
                       <div>Total:</div>
                       <div>${order.total}</div>
                     </div>
@@ -182,30 +131,6 @@ export default function OrderSummaryPage() {
           </Card>
         ))}
       </div>
-
-     
-      <Card className="mt-8">
-        <CardContent className="pt-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="text-center p-4 border rounded-lg">
-              <p className="text-2xl font-bold">{orderHistory.length}</p>
-              <p className="text-gray-600">Total Orders</p>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <p className="text-2xl font-bold">
-                ${orderHistory.reduce((sum, order) => sum + order.total, 0)}
-              </p>
-              <p className="text-gray-600">Total Spent</p>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <p className="text-2xl font-bold">
-                {orderHistory.reduce((sum, order) => sum + order.items.length, 0)}
-              </p>
-              <p className="text-gray-600">Total Items</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
