@@ -60,7 +60,7 @@ export default function Page() {
 
   return (
     
-    <div className="container mx-auto text-black font-bold ">
+    <div className="container mx-auto font-bold">
      
       <h1 className="text-3xl font-bold mb-6 text-gray-500">Your Cart</h1>
 
@@ -92,7 +92,7 @@ export default function Page() {
               </Button> 
             </div>
 
-            <Button variant="outline" className="black cursor-pointer" onClick={() => removeItem(item.id)}>
+            <Button variant="outline" className="border-red-400 border-2 cursor-pointer" onClick={() => removeItem(item.id)}>
               Remove
             </Button>
           </div>
@@ -102,7 +102,7 @@ export default function Page() {
           <h2 className="text-2xl font-bold">Total: ${total.toFixed(2)}</h2>
           <Button
           onClick={() => router.push("/checkout")}
-          className="mt-4 w-full text-lg py-3 cursor-pointer">
+          className="mt-4 w-full text-lg py-3 cursor-pointer ">
             Proceed to Checkout
           </Button>
         </div>
