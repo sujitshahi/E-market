@@ -4,8 +4,6 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Header } from '@/app/component/Header';
-import Footer from '@/app/component/Footer';
 import toast from 'react-hot-toast';
 
 export default function Page() {

@@ -53,35 +53,10 @@ export default function Page() {
           <Button className="border-black border-2 font-bold cursor-pointer" onClick={() => router.push("/")}>Continue Shopping</Button>
         </div>
        </div>
-
       </div>      
     )
   }
 
-if (cart.length === 0) {
-  return (
-    <div className="flex flex-1 flex-col items-center justify-center p-6 text-center text-xl font-semibold gap-4">
-      <div>Your cart is empty 🛒</div>
-      <div>Looks like you haven't added anything to your cart yet.</div>
-
-      <div className="space-x-4">
-        <Button
-          className="border-black border-2 font-bold cursor-pointer"
-          onClick={() => router.push("/order-summary")}
-        >
-          Your Order
-        </Button>
-
-        <Button
-          className="border-black border-2 font-bold cursor-pointer"
-          onClick={() => router.push("/")}
-        >
-          Continue Shopping
-        </Button>
-      </div>
-    </div>
-  );
-}
 
   return (
     

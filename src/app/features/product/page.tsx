@@ -138,8 +138,8 @@ export default function Page() {
             <div className="flex justify-between items-center">
               <p className="text-gray-800 font-bold">Price: ${product.price}</p>
               <div className="flex items-center">
-                <span className="text-yellow-500">★</span>
-                <span className="ml-1 text-gray-600">{product.rating?.toFixed(1)}</span>
+                <div className="text-yellow-500">★</div>
+                <div className="ml-1 text-gray-600">{product.rating?.toFixed(1)}</div>
               </div>
             </div>
           </div>
