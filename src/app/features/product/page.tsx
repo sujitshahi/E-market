@@ -18,12 +18,9 @@ type Product = {
 export default function Page() {
   const router = useRouter()
   const [products, setProducts] = useState<Product[]>([])
-  const [sortBy] = useState<'default' | 'price-low' | 'price-high' | 'popularity'>('default')
-
+  const [sortBy, setSortBy] = useState<'default' | 'price-low' | 'price-high' | 'popularity'>('default') // Made this state variable
   const [categoryFilter, setCategoryFilter] = useState('')
   const [brandFilter, setBrandFilter] = useState('')
-  const [priceFilter, setPriceFilter] = useState<'low' | 'high' | ''>('')
-
   const [categories, setCategories] = useState<string[]>([])
   const [brands, setBrands] = useState<string[]>([])
 
@@ -48,11 +45,9 @@ export default function Page() {
   const getFilteredProducts = () => {
     let list = [...products]
 
+    
     if (categoryFilter) list = list.filter(p => p.category === categoryFilter)
     if (brandFilter) list = list.filter(p => p.brand === brandFilter)
-
-    if (priceFilter === 'low') list = list.sort((a, b) => a.price - b.price)
-    else if (priceFilter === 'high') list = list.sort((a, b) => b.price - a.price)
 
     
     switch (sortBy) {
@@ -60,8 +55,8 @@ export default function Page() {
         return list.sort((a, b) => a.price - b.price)
       case 'price-high':
         return list.sort((a, b) => b.price - a.price)
-      case 'popularity':
-        return list.sort((a, b) => b.rating - a.rating)
+      case 'popularity':        
+        return list.sort((a, b) => b.rating - a.rating) 
       default:
         return list
     }
@@ -79,7 +74,7 @@ export default function Page() {
         {navCategories.map(cat => (
           <button
             key={cat}
-            className={`px-4 py-2 rounded-lg font-medium ${
+            className={`px-4 py-2 rounded-lg font-medium cursor-pointer ${
               categoryFilter === cat.toLowerCase() || (cat === 'All' && categoryFilter === '')
                 ? 'bg-blue-400 text-white'
                 : 'bg-gray-200 text-gray-700'
@@ -114,14 +109,15 @@ export default function Page() {
           ))}
         </select>
 
+     
         <select
           className="border-2 text-blue-900 rounded-lg px-4 py-2 focus:outline-none"
-          value={priceFilter}
-          onChange={(e) => setPriceFilter(e.target.value as any)}
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
         >
-          <option value="">Sort By Price</option>
-          <option value="low">Low → High</option>
-          <option value="high">High → Low</option>
+          <option value="price-low">Price: Low → High</option>
+          <option value="price-high">Price: High → Low</option>
+          <option value="popularity">Sort By Popularity</option>
         </select>
       </div>
 
@@ -152,7 +148,7 @@ export default function Page() {
 
       {displayedProducts.length === 0 && (
         <p className="text-center text-gray-500 mt-10 text-lg">
-          No products found with current filters.
+          No products found.
         </p>
       )}
     </div>

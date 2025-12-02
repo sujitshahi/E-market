@@ -4,8 +4,6 @@ import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Header } from '@/app/component/Header';
-import Footer from '@/app/component/Footer';
 
 interface Product {
   id: number;
@@ -146,7 +144,6 @@ function SearchContent() {
 export default function Page() {
   return (
     <>
-      <Header />
       <Suspense fallback={
         <div className="min-h-screen">
           <div className="max-w-7xl mx-auto p-4">
@@ -161,7 +158,7 @@ export default function Page() {
       }>
         <SearchContent />
       </Suspense>
-      <Footer />
+      
     </>
   );
 }

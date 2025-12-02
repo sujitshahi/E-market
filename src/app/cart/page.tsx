@@ -44,19 +44,49 @@ export default function Page() {
 
   if (cart.length === 0) {
     return (
-      <div className="p-6 text-center text-xl font-semibold flex flex-col gap-4">
-        Your cart is empty 🛒
-        Looks like you haven't added anything to your cart yet.
+      <div className="p-6 text-center text-xl font-semibold flex justify-items-center flex-col gap-4">
+       <div className='h-85 space-y-4'>
+        <div> Your cart is empty 🛒
+         Looks like you haven't added anything to your cart yet.</div>
         <div className="space-x-4">
           <Button className="border-black border-2 font-bold cursor-pointer" onClick={() => router.push("/order-summary")}>Your Order</Button>
           <Button className="border-black border-2 font-bold cursor-pointer" onClick={() => router.push("/")}>Continue Shopping</Button>
         </div>
+       </div>
+
       </div>      
     )
   }
 
+if (cart.length === 0) {
   return (
-    <div className="container mx-auto p-4 text-black font-bold ">
+    <div className="flex flex-1 flex-col items-center justify-center p-6 text-center text-xl font-semibold gap-4">
+      <div>Your cart is empty 🛒</div>
+      <div>Looks like you haven't added anything to your cart yet.</div>
+
+      <div className="space-x-4">
+        <Button
+          className="border-black border-2 font-bold cursor-pointer"
+          onClick={() => router.push("/order-summary")}
+        >
+          Your Order
+        </Button>
+
+        <Button
+          className="border-black border-2 font-bold cursor-pointer"
+          onClick={() => router.push("/")}
+        >
+          Continue Shopping
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+  return (
+    
+    <div className="container mx-auto text-black font-bold ">
+     
       <h1 className="text-3xl font-bold mb-6 text-gray-500">Your Cart</h1>
 
       <div>
@@ -94,7 +124,7 @@ export default function Page() {
         ))}
         
         <div className=" p-4 bg-gray-500">
-          <h2 className="text-2xl font-bold">Total: ${total}</h2>
+          <h2 className="text-2xl font-bold">Total: ${total.toFixed(2)}</h2>
           <Button
           onClick={() => router.push("/checkout")}
           className="mt-4 w-full text-lg py-3 cursor-pointer">

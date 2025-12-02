@@ -50,7 +50,7 @@ export default function OrderSummaryPage() {
   if (orderHistory.length === 0) {
     return (
       <div className="mx-auto p-6">
-        <div className="text-center">
+        <div className="text-center h-82">
           <h1 className="text-3xl font-bold mb-4">No Orders Yet</h1>
           <Button className="border-2 cursor-pointer" onClick={() => router.push("/")}>Continue Shopping</Button>
         </div>

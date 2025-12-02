@@ -125,9 +125,7 @@ export default function Page() {
         total: product.price * qty
       };
 
-      
       localStorage.setItem("checkoutItem", JSON.stringify(checkoutItem));
-      
       
       router.push("/checkout");
     } catch (error) {
@@ -136,15 +134,15 @@ export default function Page() {
     }
   };
 
-  if (loading) {
-    return (
-      <>
-        <Header />
-        <p className="p-4">Loading...</p>
-        <Footer />
-      </>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <>
+  //       <Header />
+  //       <p className="p-4">Loading...</p>
+  //       <Footer />
+  //     </>
+  //   );
+  // }
 
   if (!product) {
     return (
@@ -158,9 +156,7 @@ export default function Page() {
 
   return (
     <>
-      <Header />
-
-      <div className="mt-25 mx-auto">
+        <div className="mt-25 mx-auto">
         <div className="max-w-4xl mx-auto bg-gray-500 shadow-md rounded-lg text-white mb-8">
           <div className="md:flex">
             <img src={product.image} alt={product.title} className="w-full md:w-1/2 object-cover" />
@@ -220,8 +216,6 @@ export default function Page() {
           </div>
         )}
       </div>
-
-      <Footer />
     </>
   );
 }

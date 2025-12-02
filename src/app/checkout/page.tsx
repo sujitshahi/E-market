@@ -192,10 +192,19 @@ export default function Page() {
       <h1 className="text-3xl font-bold mb-8">Checkout</h1>
 
       {showOrderHistory ? (
-        <div className="space-y-6">
+        <div className="">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold">Order Confirmation</h2>
+           <div className="space-x-4">
+             <Button 
+             className="ml-auto gap-2 cursor-pointer"
+              variant="outline"
+              onClick={() => {router.push("/order-summary")}}
+              >Your Order
+              </Button> 
+              
             <Button 
+              className="cursor-pointer"
               variant="outline" 
               onClick={() => {
                 setShowOrderHistory(false);
@@ -204,6 +213,7 @@ export default function Page() {
             >
               Continue Shopping
             </Button>
+           </div>
           </div>
 
           <Card>
