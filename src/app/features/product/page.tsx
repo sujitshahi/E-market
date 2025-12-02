@@ -68,7 +68,7 @@ export default function Page() {
 
   return (
     <div className="container mx-auto py-8 p-4">
-      <h1 className="text-3xl font-bold mb-4 text-center text-blue-400">Our Featured Products</h1>
+      <h1 className="text-3xl font-bold mb-4 text-center text-blue-400">Our Products</h1>
 
       <div className="flex justify-center space-x-4 mb-6">
         {navCategories.map(cat => (
