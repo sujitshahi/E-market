@@ -46,7 +46,7 @@ export function Header() {
   };
 
   return (
-    <header className="bg-blue-500 shadow-md sticky top-0 z-50">
+    <header className="bg-gray-900 shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between relative">
 
      
@@ -60,7 +60,7 @@ export function Header() {
            
           </div>
 
-          <div>
+          <div className="text-white border-white">
              <Button className="font-bold text-xl border-2 cursor-pointer" onClick={() => router.push("/")}>Home</Button>
           </div>
         </div>
@@ -69,13 +69,13 @@ export function Header() {
         <div className="md:hidden flex-1 mx-4 relative">
           <form onSubmit={handleSearch} className="flex gap-2">
             <Input
-              className="w-full border-2"
+              className="w-full border-2 border-white text-white"
               type="search"
               placeholder="Search..."
               value={searchQuery}
               onChange={(e) => handleLiveSearch(e.target.value)}
             />
-            <Button type="submit" className="border-2">
+            <Button type="submit" className="border-2 border-white text-white">
               <i className="fa-solid fa-search"></i>
             </Button>
           </form>
@@ -104,13 +104,13 @@ export function Header() {
         <div className="hidden md:flex gap-2 flex-1 mx-8 relative">
           <form onSubmit={handleSearch} className="flex w-full gap-2">
             <Input
-              className="w-full border-2"
+              className="w-full border-2 border-white text-white"
               type="search"
               placeholder="Search products..."
               value={searchQuery}
               onChange={(e) => handleLiveSearch(e.target.value)} 
             />
-            <Button type="submit" className="border-2 font-bold">
+            <Button type="submit" className="border-2 cursor-pointer font-bold border-white text-white">
               Search
             </Button>
           </form>

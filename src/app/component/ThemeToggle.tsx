@@ -24,16 +24,16 @@ export default function ThemeToggle() {
       <TooltipTrigger asChild>
         <button
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-      className="p-2 rounded-full border shadow dark:hover:bg-gray-700 transition"
+      className="p-2 rounded-full border border-white shadow dark:hover:bg-gray-700 transition cursor-pointer"
     >
       {theme === "light" ? (
-        <Moon className="w-5 h-5" />
+        <Moon className="w-5 h-5 text-white" />
       ) : (
         <Sun className="w-5 h-5" />
       )}
     </button>
       </TooltipTrigger>
-      <TooltipContent>
+      <TooltipContent className=" text-white">
         <p className="font-bold text-2xl">Light/Dark Mode</p>
       </TooltipContent>
     </Tooltip>
