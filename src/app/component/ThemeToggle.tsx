@@ -33,7 +33,7 @@ export default function ThemeToggle() {
       )}
     </button>
       </TooltipTrigger>
-      <TooltipContent className=" text-black">
+      <TooltipContent className=" text-white">
         <p className="font-bold text-2xl">Light/Dark Mode</p>
       </TooltipContent>
     </Tooltip>

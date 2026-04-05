@@ -80,13 +80,12 @@ export function Header() {
             </Button>
           </form>
 
-         
-          {liveResults.length > 0 && (
-            <div className="absolute bg-white shadow-lg mt-1 w-full max-h-60 overflow-y-auto border rounded z-50">
+                  {liveResults.length > 0 && (
+            <div className="absolute bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 shadow-lg mt-1 w-full max-h-60 overflow-y-auto border border-gray-200 dark:border-zinc-700 rounded z-50">
               {liveResults.map((item: any) => (
                 <div
                   key={item.id}
-                  className="p-2 hover:bg-gray-100 cursor-pointer"
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 cursor-pointer transition-colors"
                   onClick={() => {
                     router.push(`/products/${item.id}`);
                     setLiveResults([]);
@@ -98,41 +97,45 @@ export function Header() {
               ))}
             </div>
           )}
-        </div>
+          </div>
 
-      
-        <div className="hidden md:flex gap-2 flex-1 mx-8 relative">
-          <form onSubmit={handleSearch} className="flex w-full gap-2">
-            <Input
-              className="w-full border-2 border-white text-white"
-              type="search"
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={(e) => handleLiveSearch(e.target.value)} 
-            />
-            <Button type="submit" className="border-2 cursor-pointer font-bold border-white text-white">
-              Search
-            </Button>
-          </form>
+          <div className="hidden md:flex gap-2 flex-1 mx-8 relative">
+            <form onSubmit={handleSearch} className="flex w-full gap-2">
+              <Input
+                className="w-full border-2 border-white text-white"
+                type="search"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => handleLiveSearch(e.target.value)} 
+              />
+              <Button type="submit" className="border-2 cursor-pointer font-bold border-white text-white">
+                Search
+              </Button>
+            </form>
 
-                   {liveResults.length > 0 && (
-            <div className="absolute bg-white shadow-lg mt-10 w-full border rounded">
-              {liveResults.map((item: any) => (
-                <div
-                  key={item.id}
-                  className="p-2 hover:bg-gray-100 cursor-pointer"
-                  onClick={() => {
-                    router.push(`/products/${item.id}`);
-                  setLiveResults([]);
-                    setSearchQuery("");
-                  }}
-                >
-                  {item.title}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+            {liveResults.length > 0 && (
+              /* Fixed second dropdown for Dark Mode */
+              <div className="absolute bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 shadow-lg mt-10 w-full border border-gray-200 dark:border-zinc-700 rounded z-50">
+                {liveResults.map((item: any) => (
+                  <div
+                    key={item.id}
+                    className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 cursor-pointer transition-colors"
+                    onClick={() => {
+                      router.push(`/products/${item.id}`);
+                      setLiveResults([]);
+                      setSearchQuery("");
+                    }}
+                  >
+                    {item.title}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+
+
+
 
      
         <div className="flex items-center gap-5">
