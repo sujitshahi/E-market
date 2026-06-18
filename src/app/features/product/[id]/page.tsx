@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { useParams, useRouter } from 'next/navigation';
 import toast from 'react-hot-toast'
-import { Header } from '@/app/component/Header';
-import Footer from '@/app/component/Footer';
+
 
 interface Product {
   id: number;
@@ -134,22 +133,13 @@ export default function Page() {
     }
   };
 
-  // if (loading) {
-  //   return (
-  //     <>
-  //       <Header />
-  //       <p className="p-4">Loading...</p>
-  //       <Footer />
-  //     </>
-  //   );
-  // }
+
 
   if (!product) {
     return (
       <>
-        <Header />
-        <p className="p-4">Product not found</p>
-        <Footer />
+        <p className="p-4">Loading...</p>
+        
       </>
     );
   }
