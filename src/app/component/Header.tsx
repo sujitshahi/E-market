@@ -17,11 +17,11 @@ export function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [liveResults, setLiveResults] = useState<any[]>([]);
 
-  // Arrays of refs to keep track of dropdown item DOM elements
+
   const mobileRefs = useRef<(HTMLDivElement | null)[]>([]);
   const desktopRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Keep dropdown item refs clean
+ 
   useEffect(() => {
     mobileRefs.current = mobileRefs.current.slice(0, liveResults.length);
     desktopRefs.current = desktopRefs.current.slice(0, liveResults.length);
@@ -55,7 +55,7 @@ export function Header() {
     }
   };
 
-  // Shared function to handle keyboard navigation across dropdown containers
+  
   const handleDropdownKeyDown = (
     e: React.KeyboardEvent,
     index: number,
@@ -80,7 +80,7 @@ export function Header() {
     }
   };
 
-  // Triggers when a user presses down arrow while inside the actual text boxes
+ 
   const handleInputKeyDown = (e: React.KeyboardEvent, refArray: React.MutableRefObject<(HTMLDivElement | null)[]>) => {
     if (e.key === 'ArrowDown' && liveResults.length > 0) {
       e.preventDefault();
@@ -103,7 +103,7 @@ export function Header() {
           </div>
         </div>
 
-        {/* MOBILE VIEW SEARCH PORTAL */}
+
         <div className="md:hidden flex-1 mx-4 relative">
           <form onSubmit={handleSearch} className="flex gap-2">
             <Input
@@ -142,7 +142,7 @@ export function Header() {
           )}
         </div>
 
-        {/* DESKTOP VIEW SEARCH PORTAL */}
+   
         <div className="hidden md:flex gap-2 flex-1 mx-8 relative">
           <form onSubmit={handleSearch} className="flex w-full gap-2">
             <Input

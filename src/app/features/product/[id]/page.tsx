@@ -51,7 +51,7 @@ export default function Page() {
           });
           setLoading(false);
 
-          // for similar products
+          
           fetch('https://dummyjson.com/products')
             .then(res => res.json())
             .then(allProducts => {

@@ -41,24 +41,25 @@ interface OrderHistory {
 }
 
 const schema = yup.object({
-  firstName: yup.string().required(),
-  lastName: yup.string().required(),
-  email: yup.string().email().required(),
-  phone: yup.string().required(),
-  address: yup.string().required(),
-  paymentMethod: yup.string().required(),
+  firstName: yup.string().required("First name is required"),
+  lastName: yup.string().required("Last name is required"),
+  email: yup.string().email("Invalid email format").required("Email is required"),
+  phone: yup.string().matches(/^\d{10}$/, "Phone number must be 10 digits").required("Phone number is required"),
+  address: yup.string().required("Delivery address is required"),
+  paymentMethod: yup.string().required("Please select a payment method"),
 });
 
 export default function Page() {
   const router = useRouter();  
-  const [cart, setCart] = useState<CartItem[]>([]); 
-  const [buyNowItem, setBuyNowItem] = useState<BuyNowItem | null>(null); 
-  const [total, setTotal] = useState(0); 
-  const [orderHistory, setOrderHistory] = useState<OrderHistory[]>([]); 
+  const [mounted, setMounted] = useState(false);
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [buyNowItem, setBuyNowItem] = useState<BuyNowItem | null>(null);
+  const [total, setTotal] = useState(0);
+  const [orderHistory, setOrderHistory] = useState<OrderHistory[]>([]);
   const [showOrderHistory, setShowOrderHistory] = useState(false);
-  const [errors, setErrors] = useState<any>({}); 
+  const [errors, setErrors] = useState<any>({});
    
-   const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
@@ -67,7 +68,38 @@ export default function Page() {
     paymentMethod: "",
   });
 
- 
+  
+  useEffect(() => {
+    setMounted(true);
+
+    const savedBuyNowItem = localStorage.getItem("checkoutItem");
+    if (savedBuyNowItem) {
+      try {
+        setBuyNowItem(JSON.parse(savedBuyNowItem));
+        localStorage.removeItem("checkoutItem");
+      } catch (err) {
+        console.log("Error loading buy now item:", err);
+      }
+    }
+
+    const savedCart = localStorage.getItem("cart");
+    if (savedCart) {
+      try {
+        setCart(JSON.parse(savedCart));
+      } catch (err) {
+        console.log("Error loading cart:", err);
+      }
+    }
+
+    const savedOrders = localStorage.getItem("orderHistory");
+    if (savedOrders) {
+      try {
+        setOrderHistory(JSON.parse(savedOrders));
+      } catch (err) {
+        console.log("Error loading order history:", err);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const validateEmail = async () => {
@@ -84,57 +116,20 @@ export default function Page() {
     }
   }, [formData.email]);
 
- 
-  useEffect(() => {
-   
-    const savedBuyNowItem = localStorage.getItem("checkoutItem");
-    if (savedBuyNowItem) {
-      try {
-        setBuyNowItem(JSON.parse(savedBuyNowItem));
-        localStorage.removeItem("checkoutItem");
-      } catch (err) {
-        console.log("Error loading buy now item:", err);
-      }
-    }
-
-   
-    const savedCart = localStorage.getItem("cart");
-    if (savedCart) {
-      try {
-        setCart(JSON.parse(savedCart));
-      } catch (err) {
-        console.log("Error loading cart:", err);
-      }
-    }
-
-   
-    const savedOrders = localStorage.getItem("orderHistory");
-    if (savedOrders) {
-      try {
-        setOrderHistory(JSON.parse(savedOrders));
-      } catch (err) {
-        console.log("Error loading order history:", err);
-      }
-    }
-  }, []);
-
-
   useEffect(() => {
     if (buyNowItem) {
       setTotal(buyNowItem.total);
     } else {
-      
       const t = cart.reduce((s, item) => s + item.price * item.qty, 0);
       setTotal(t);
     }
   }, [cart, buyNowItem]);
 
-
   const handlePlaceOrder = async () => {
     try {    
       await schema.validate(formData, { abortEarly: false });
       let orderItems: CartItem[] = [];
-      
+     
       if (buyNowItem) {    
         orderItems = [{
           id: buyNowItem.id,
@@ -143,10 +138,9 @@ export default function Page() {
           image: buyNowItem.image,
           qty: buyNowItem.qty
         }];
-      } else {       
+      } else {      
         orderItems = [...cart];
       }
-
 
       const order: OrderHistory = {
         id: `ORD-${Date.now()}`,
@@ -175,7 +169,7 @@ export default function Page() {
       toast.success("Order placed successfully!");
       setShowOrderHistory(true);
 
-    } catch (err: any) { 
+    } catch (err: any) {
       const collected: any = {};
       if (err.inner) {
         err.inner.forEach((e: any) => {
@@ -187,57 +181,62 @@ export default function Page() {
     }
   };
 
+
+  if (!mounted) {
+    return <div className="container mx-auto p-6 max-w-6xl min-h-screen dynamic-fallback" />;
+  }
+
   return (
-    <div className="container mx-auto p-6 max-w-6xl">
+    <div className="container mx-auto p-6 max-w-6xl text-foreground bg-background">
       <h1 className="text-3xl font-bold mb-8">Checkout</h1>
 
       {showOrderHistory ? (
-        <div className="">
+        <div className="space-y-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold">Order Confirmation</h2>
-           <div className="space-x-4">
-             <Button 
-             className="ml-auto gap-2 cursor-pointer"
-              variant="outline"
-              onClick={() => {router.push("/order-summary")}}
-              >Your Order
-              </Button> 
-              
-            <Button 
-              className="cursor-pointer"
-              variant="outline" 
-              onClick={() => {
-                setShowOrderHistory(false);
-                router.push("/");
-              }}
-            >
-              Continue Shopping
-            </Button>
-           </div>
+            <div className="space-x-4">
+              <Button
+                className="ml-auto gap-2 cursor-pointer"
+                variant="outline"
+                onClick={() => {router.push("/order-summary")}}
+              >
+                Your Order
+              </Button>
+             
+              <Button
+                className="cursor-pointer"
+                variant="outline"
+                onClick={() => {
+                  setShowOrderHistory(false);
+                  router.push("/");
+                }}
+              >
+                Continue Shopping
+              </Button>
+            </div>
           </div>
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-green-600">✅ Order Placed Successfully!</CardTitle>
+              <CardTitle className="text-green-600 dark:text-green-400">✅ Order Placed Successfully!</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="mb-4">Thank you for your purchase. Your order has been confirmed.</p>
-              
+              <p className="mb-4 text-muted-foreground">Thank you for your purchase. Your order has been confirmed.</p>
+             
               {orderHistory.length > 0 && orderHistory[0] && (
-                <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
+                <div className="space-y-4 p-4 bg-muted/50 rounded-lg border border-border">
                   <div className="grid grid-cols-2 gap-4">
-                 
                     <div>
-                      <p className="text-sm text-gray-600">Customer</p>
+                      <p className="text-sm text-muted-foreground">Customer</p>
                       <p className="font-semibold">{orderHistory[0].firstName} {orderHistory[0].lastName}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Payment Method</p>
-                      <p className="font-semibold">{orderHistory[0].paymentMethod}</p>
+                      <p className="text-sm text-muted-foreground">Payment Method</p>
+                      <p className="font-semibold uppercase">{orderHistory[0].paymentMethod}</p>
                     </div>
                   </div>
-                  
-                  <div className="border-t pt-4">
+                 
+                  <div className="border-t border-border pt-4">
                     <h3 className="font-bold mb-2">Items Ordered:</h3>
                     {orderHistory[0].items.map(item => (
                       <div key={item.id} className="flex justify-between items-center mb-2">
@@ -245,19 +244,19 @@ export default function Page() {
                           <img
                             src={item.image}
                             alt={item.title}
-                            className="w-12 h-12 object-cover rounded"
+                            className="w-12 h-12 object-cover rounded border border-border"
                           />
                           <div>
                             <p className="font-medium">{item.title}</p>
-                            <p className="text-sm text-gray-600">Qty: {item.qty}</p>
+                            <p className="text-sm text-muted-foreground">Qty: {item.qty}</p>
                           </div>
                         </div>
                         <p className="font-semibold">${(item.price * item.qty).toFixed(2)}</p>
                       </div>
                     ))}
                   </div>
-                  
-                  <div className="border-t pt-4">
+                 
+                  <div className="border-t border-border pt-4">
                     <div className="flex justify-between text-lg font-bold">
                       <div>Total Amount</div>
                       <div>${orderHistory[0].total.toFixed(2)}</div>
@@ -269,7 +268,6 @@ export default function Page() {
           </Card>
         </div>
       ) : (
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
          
           <div className="space-y-6">
@@ -289,10 +287,10 @@ export default function Page() {
                       }
                     />
                     {errors.firstName && (
-                      <p className="text-red-500 text-sm">{errors.firstName}</p>
+                      <p className="text-destructive text-sm">{errors.firstName}</p>
                     )}
                   </div>
-                  
+                 
                   <div className="space-y-2">
                     <Label>Last Name</Label>
                     <Input
@@ -303,11 +301,11 @@ export default function Page() {
                       }
                     />
                     {errors.lastName && (
-                      <p className="text-red-500 text-sm">{errors.lastName}</p>
+                      <p className="text-destructive text-sm">{errors.lastName}</p>
                     )}
                   </div>
                 </div>
-                
+               
                 <div className="space-y-2">
                   <Label>Email</Label>
                   <Input
@@ -319,7 +317,7 @@ export default function Page() {
                     }
                   />
                   {errors.email && (
-                    <p className="text-red-500 text-sm">{errors.email}</p>
+                    <p className="text-destructive text-sm">{errors.email}</p>
                   )}
                 </div>
 
@@ -333,7 +331,7 @@ export default function Page() {
                     }
                   />
                   {errors.phone && (
-                    <p className="text-red-500 text-sm">{errors.phone}</p>
+                    <p className="text-destructive text-sm">{errors.phone}</p>
                   )}
                 </div>
 
@@ -347,7 +345,7 @@ export default function Page() {
                     }
                   />
                   {errors.address && (
-                    <p className="text-red-500 text-sm">{errors.address}</p>
+                    <p className="text-destructive text-sm">{errors.address}</p>
                   )}
                 </div>
               </CardContent>
@@ -365,23 +363,24 @@ export default function Page() {
                 >
                   <div className="flex items-center gap-2 mb-4">
                     <RadioGroupItem value="e-sewa" id="e-sewa" />
-                    <Label htmlFor="e-sewa">E-sewa</Label>
+                    <Label htmlFor="e-sewa" className="cursor-pointer">E-sewa</Label>
                   </div>
 
                   <div className="flex items-center gap-2">
                     <RadioGroupItem value="khalti" id="khalti" />
-                    <Label htmlFor="khalti">Khalti</Label>
+                    <Label htmlFor="khalti" className="cursor-pointer">Khalti</Label>
                   </div>
                 </RadioGroup>
 
                 {errors.paymentMethod && (
-                  <p className="text-red-500 text-sm mt-2">{errors.paymentMethod}</p>
+                  <p className="text-destructive text-sm mt-2">{errors.paymentMethod}</p>
                 )}
               </CardContent>
             </Card>
           </div>
 
-            <div className="space-y-6">
+       
+          <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle>Order Summary</CardTitle>
@@ -389,35 +388,33 @@ export default function Page() {
 
               <CardContent>
                 <div className="space-y-4">
-                  {buyNowItem ? (                 
+                  {buyNowItem ? (                
                     <div key={buyNowItem.id} className="flex justify-between items-center">
                       <div className="flex items-center gap-3">
                         <img
                           src={buyNowItem.image}
                           alt={buyNowItem.title}
-                          className="w-12 h-12 object-cover rounded"
+                          className="w-12 h-12 object-cover rounded border border-border"
                         />
                         <div>
                           <p className="font-medium">{buyNowItem.title}</p>
-                          <p className="text-sm text-gray-600">Qty: {buyNowItem.qty}</p>
-                          
+                          <p className="text-sm text-muted-foreground">Qty: {buyNowItem.qty}</p>
                         </div>
                       </div>
                       <p className="font-semibold">${buyNowItem.total.toFixed(2)}</p>
                     </div>
                   ) : (
-                    
                     cart.map(item => (
                       <div key={item.id} className="flex justify-between items-center">
                         <div className="flex items-center gap-3">
                           <img
                             src={item.image}
                             alt={item.title}
-                            className="w-12 h-12 object-cover rounded"
+                            className="w-12 h-12 object-cover rounded border border-border"
                           />
                           <div>
                             <p className="font-medium">{item.title}</p>
-                            <p className="text-sm text-gray-600">Qty: {item.qty}</p>
+                            <p className="text-sm text-muted-foreground">Qty: {item.qty}</p>
                           </div>
                         </div>
                         <p className="font-semibold">${(item.price * item.qty).toFixed(2)}</p>
@@ -427,7 +424,7 @@ export default function Page() {
                 </div>
             
                 <div className="mt-4 pt-4 space-y-2">
-                  <div className="flex justify-between text-lg font-bold border-t pt-2">
+                  <div className="flex justify-between text-lg font-bold border-t border-border pt-2">
                     <div>Total Amount</div>
                     <div>${total.toFixed(2)}</div>
                   </div>
@@ -436,7 +433,7 @@ export default function Page() {
                 <Button
                   variant="outline"
                   className="w-full mt-6 text-lg py-3 cursor-pointer"
-                  onClick={handlePlaceOrder}                 
+                  onClick={handlePlaceOrder}                
                   disabled={buyNowItem ? false : cart.length === 0}
                 >
                   Confirm Order
@@ -449,7 +446,6 @@ export default function Page() {
                 >
                   Back to Cart
                 </Button>
-
               </CardContent>
             </Card>
           </div>

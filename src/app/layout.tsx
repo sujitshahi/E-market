@@ -1,8 +1,8 @@
-'use client' // Add this at the top
+'use client' 
 
-import type { Metadata } from "next";
+
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "@/app/globals.css";
 import { Toaster } from "react-hot-toast";
 import { Providers } from "./providers";
 import { Header } from "./component/Header";
@@ -27,7 +27,7 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname(); // Get current path
   const isCartPage = pathname === '/cart'; // Check if current page is cart
-  
+  const isProductDetailPage = pathname.includes('/features/product/');
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <head>
@@ -43,8 +43,8 @@ export default function RootLayout({
           <Header />
           {children}
           <Toaster />
-          {/* Only show footer if NOT on cart page */}
-          {!isCartPage && <Footer />}
+          {/* Only show footer if NOT on cart page and not on product detail page */}
+          {!isCartPage && !isProductDetailPage &&  <Footer />}
         </Providers>
       </body>
     </html>    
