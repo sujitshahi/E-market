@@ -137,10 +137,10 @@ export default function Page() {
 
   if (!product) {
     return (
-      <>
-        <p className="p-4">Loading...</p>
+       <p className="p-4">Loading...</p>
+       
         
-      </>
+      
     );
   }
 
