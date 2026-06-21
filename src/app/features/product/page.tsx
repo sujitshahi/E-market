@@ -88,7 +88,7 @@ export default function Page() {
 
       <div className="flex flex-wrap mb-6 gap-4">
         <select
-          className="border-2 text-blue-900 rounded-lg px-4 py-2 focus:outline-none"
+          className="border-2 text-blue-500 rounded-lg px-4 py-2 focus:outline-none cursor-pointer"
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
         >
@@ -99,7 +99,7 @@ export default function Page() {
         </select>
 
         <select
-          className="border-2 text-blue-900 rounded-lg px-4 py-2 focus:outline-none"
+          className="border-2 text-blue-500 rounded-lg px-4 py-2 focus:outline-none cursor-pointer"
           value={brandFilter}
           onChange={(e) => setBrandFilter(e.target.value)}
         >
@@ -111,7 +111,7 @@ export default function Page() {
 
      
         <select
-          className="border-2 text-blue-900 rounded-lg px-4 py-2 focus:outline-none"
+          className="border-2 text-blue-500 rounded-lg px-4 py-2 focus:outline-none cursor-pointer"
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
         >
