@@ -969,7 +969,7 @@ export default function Page() {
           </div>
           <h1 className={`text-4xl sm:text-6xl font-extrabold tracking-tight ${
             isDark 
-              ? 'bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent'
+              ? 'bg-linear-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent'
               : 'text-slate-900'
           }`}>
             Discover Tech & Lifestyle

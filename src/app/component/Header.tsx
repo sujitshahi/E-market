@@ -585,7 +585,7 @@ export function Header() {
             onClick={() => router.push("/")}
           >
             <i className="fa-solid fa-bag-shopping text-indigo-500 group-hover:scale-110 transition-transform"></i>
-            <span className={isDark ? "bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent" : "text-slate-900"}>
+            <span className={isDark ? "bg-linear-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent" : "text-slate-900"}>
               SHOP
             </span>
           </div>
