@@ -472,6 +472,266 @@
 
 
 
+// 'use client';
+
+// import { useRouter } from "next/navigation";
+// import { Input } from "@/components/ui/input";
+// import { Button } from "@/components/ui/button";
+// import {
+//   Tooltip,
+//   TooltipContent,
+//   TooltipTrigger,
+// } from "@/components/ui/tooltip";
+// import { useState, useRef, useEffect } from "react";
+
+// export function Header() {
+//   const router = useRouter();
+//   const [searchQuery, setSearchQuery] = useState("");
+//   const [liveResults, setLiveResults] = useState<any[]>([]);
+//   const [isDark, setIsDark] = useState(true);
+
+//   const mobileRefs = useRef<(HTMLDivElement | null)[]>([]);
+//   const desktopRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+//   useEffect(() => {
+//     const savedTheme = localStorage.getItem('theme');
+//     if (savedTheme) {
+//       setIsDark(savedTheme === 'dark');
+//     }
+//   }, []);
+
+//   const toggleTheme = () => {
+//     setIsDark((prev) => {
+//       const nextTheme = !prev;
+//       localStorage.setItem('theme', nextTheme ? 'dark' : 'light');
+//       window.dispatchEvent(new Event('storage'));
+//       return nextTheme;
+//     });
+//   };
+
+//   useEffect(() => {
+//     mobileRefs.current = mobileRefs.current.slice(0, liveResults.length);
+//     desktopRefs.current = desktopRefs.current.slice(0, liveResults.length);
+//   }, [liveResults]);
+
+//   const handleSearch = (e?: React.FormEvent) => {
+//     if (e) e.preventDefault();
+    
+//     if (searchQuery.trim()) {
+//       router.push(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
+//       setSearchQuery("");
+//       setLiveResults([]); 
+//     }
+//   };
+
+//   const handleLiveSearch = async (value: string) => {
+//     setSearchQuery(value);
+
+//     if (!value.trim()) {
+//       setLiveResults([]);
+//       return;
+//     }
+
+//     try {
+//       const res = await fetch(`https://dummyjson.com/products/search?q=${value}`);
+//       const data = await res.json();
+//       setLiveResults(data.products || []);
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   };
+
+//   const handleDropdownKeyDown = (
+//     e: React.KeyboardEvent,
+//     index: number,
+//     item: any,
+//     refArray: React.MutableRefObject<(HTMLDivElement | null)[]>
+//   ) => {
+//     if (e.key === 'ArrowDown') {
+//       e.preventDefault();
+//       if (index + 1 < liveResults.length) {
+//         refArray.current[index + 1]?.focus();
+//       }
+//     } else if (e.key === 'ArrowUp') {
+//       e.preventDefault();
+//       if (index - 1 >= 0) {
+//         refArray.current[index - 1]?.focus();
+//       }
+//     } else if (e.key === 'Enter' || e.key === ' ') {
+//       e.preventDefault();
+//       router.push(`/features/product/${item.id}`);
+//       setLiveResults([]);
+//       setSearchQuery("");
+//     }
+//   };
+
+//   const handleInputKeyDown = (e: React.KeyboardEvent, refArray: React.MutableRefObject<(HTMLDivElement | null)[]>) => {
+//     if (e.key === 'ArrowDown' && liveResults.length > 0) {
+//       e.preventDefault();
+//       refArray.current[0]?.focus();
+//     }
+//   };
+
+//   return (
+//     <header className={`sticky top-0 z-50 backdrop-blur-xl border-b transition-colors duration-500 ${
+//       isDark ? 'bg-slate-950/80 border-slate-800 text-slate-100' : 'bg-white/80 border-slate-200 text-slate-900'
+//     }`}>
+//       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4 relative">
+
+//         {/* Brand & Home */}
+//         <div className="flex items-center gap-4">
+//           <div 
+//             className="flex items-center gap-2 text-2xl font-black tracking-tight cursor-pointer group"
+//             onClick={() => router.push("/")}
+//           >
+//             <i className="fa-solid fa-bag-shopping text-indigo-500 group-hover:scale-110 transition-transform"></i>
+//             <span className={isDark ? "bg-linear-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent" : "text-slate-900"}>
+//               SHOP
+//             </span>
+//           </div>
+
+//           <Button 
+//             variant="ghost" 
+//             onClick={() => router.push("/")}
+//             className={`hidden sm:flex text-xs font-semibold rounded-2xl transition-all ${
+//               isDark ? 'hover:bg-slate-800 text-slate-300' : 'hover:bg-slate-100 text-slate-700'
+//             }`}
+//           >
+//             Home
+//           </Button>
+//         </div>
+
+//         {/* Mobile Search Input */}
+//         <div className="md:hidden flex-1 relative">
+//           <form onSubmit={handleSearch} className="flex gap-2">
+//             <Input
+//               className={`w-full text-xs rounded-2xl border transition-all focus:ring-1 focus:ring-indigo-500 ${
+//                 isDark 
+//                   ? 'bg-slate-900/80 border-slate-800 text-slate-200 placeholder-slate-500' 
+//                   : 'bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400'
+//               }`}
+//               type="search"
+//               placeholder="Search..."
+//               value={searchQuery}
+//               onChange={(e) => handleLiveSearch(e.target.value)}
+//               onKeyDown={(e) => handleInputKeyDown(e, mobileRefs)}
+//             />
+//             <Button type="submit" size="icon" className="rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white shrink-0">
+//               <i className="fa-solid fa-search text-xs"></i>
+//             </Button>
+//           </form>
+
+//           {liveResults.length > 0 && (
+//             <div className={`absolute left-0 right-0 shadow-2xl mt-2 max-h-60 overflow-y-auto border rounded-2xl z-50 backdrop-blur-xl ${
+//               isDark ? 'bg-slate-900/95 border-slate-800 text-slate-200' : 'bg-white/95 border-slate-200 text-slate-800'
+//             }`}>
+//               {liveResults.map((item: any, idx: number) => (
+//                 <div
+//                   key={item.id}
+//                   ref={(el) => { mobileRefs.current[idx] = el; }}
+//                   tabIndex={0}
+//                   role="button"
+//                   className={`p-3 text-xs font-medium cursor-pointer transition-colors ${
+//                     isDark 
+//                       ? 'hover:bg-indigo-600/20 focus:bg-indigo-600/30 text-slate-200' 
+//                       : 'hover:bg-indigo-50 focus:bg-indigo-100 text-slate-800'
+//                   }`}
+//                   onClick={() => {
+//                     router.push(`/features/product/${item.id}`);
+//                     setLiveResults([]);
+//                     setSearchQuery("");
+//                   }}
+//                   onKeyDown={(e) => handleDropdownKeyDown(e, idx, item, mobileRefs)}
+//                 >
+//                   {item.title}
+//                 </div>
+//               ))}
+//             </div>
+//           )}
+//         </div>
+
+//         {/* Desktop Search Input */}
+//         <div className="hidden md:flex gap-2 flex-1 max-w-md mx-4 relative">
+//           <form onSubmit={handleSearch} className="flex w-full gap-2">
+//             <Input
+//               className={`w-full text-xs rounded-2xl border transition-all focus:ring-1 focus:ring-indigo-500 ${
+//                 isDark 
+//                   ? 'bg-slate-900/80 border-slate-800 text-slate-200 placeholder-slate-500' 
+//                   : 'bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400'
+//               }`}
+//               type="search"
+//               placeholder="Search products..."
+//               value={searchQuery}
+//               onChange={(e) => handleLiveSearch(e.target.value)} 
+//               onKeyDown={(e) => handleInputKeyDown(e, desktopRefs)}
+//             />
+//             <Button type="submit" className="rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs px-5">
+//               Search
+//             </Button>
+//           </form>
+
+//           {liveResults.length > 0 && (
+//             <div className={`absolute top-full left-0 right-0 shadow-2xl mt-2 border rounded-2xl z-50 max-h-60 overflow-y-auto backdrop-blur-xl ${
+//               isDark ? 'bg-slate-900/95 border-slate-800 text-slate-200' : 'bg-white/95 border-slate-200 text-slate-800'
+//             }`}>
+//               {liveResults.map((item: any, idx: number) => (
+//                 <div
+//                   key={item.id}
+//                   ref={(el) => { desktopRefs.current[idx] = el; }}
+//                   tabIndex={0}
+//                   role="button"
+//                   className={`p-3 text-xs font-medium cursor-pointer transition-colors ${
+//                     isDark 
+//                       ? 'hover:bg-indigo-600/20 focus:bg-indigo-600/30 text-slate-200' 
+//                       : 'hover:bg-indigo-50 focus:bg-indigo-100 text-slate-800'
+//                   }`}
+//                   onClick={() => {
+//                     router.push(`/features/product/${item.id}`);
+//                     setLiveResults([]);
+//                     setSearchQuery("");
+//                   }}
+//                   onKeyDown={(e) => handleDropdownKeyDown(e, idx, item, desktopRefs)}
+//                 >
+//                   {item.title}
+//                 </div>
+//               ))}
+//             </div>
+//           )}
+//         </div>
+
+//         {/* Actions Section: Theme Toggle & Cart */}
+//         <div className="flex items-center gap-3">
+//           <Tooltip>
+//             <TooltipTrigger asChild>
+//               <button
+//                 onClick={() => router.push("/cart")}
+//                 className={`p-2 rounded-2xl border transition-all hover:scale-105 active:scale-95 cursor-pointer ${
+//                   isDark 
+//                     ? 'bg-slate-900 border-slate-800 text-slate-200 hover:bg-slate-800' 
+//                     : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+//                 }`}
+//               >
+//                 <i className="fa-solid fa-cart-arrow-down text-lg"></i>
+//               </button>
+//             </TooltipTrigger>
+//             <TooltipContent>
+//               <span className="font-semibold text-xs">View Cart</span>
+//             </TooltipContent>
+//           </Tooltip>
+//         </div>
+//       </div>
+//     </header>
+//   );
+// }
+
+
+
+
+
+
+
+
+
 'use client';
 
 import { useRouter } from "next/navigation";
@@ -489,9 +749,9 @@ export function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [liveResults, setLiveResults] = useState<any[]>([]);
   const [isDark, setIsDark] = useState(true);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
 
-  const mobileRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const desktopRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const searchItemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -510,8 +770,7 @@ export function Header() {
   };
 
   useEffect(() => {
-    mobileRefs.current = mobileRefs.current.slice(0, liveResults.length);
-    desktopRefs.current = desktopRefs.current.slice(0, liveResults.length);
+    searchItemRefs.current = searchItemRefs.current.slice(0, liveResults.length);
   }, [liveResults]);
 
   const handleSearch = (e?: React.FormEvent) => {
@@ -521,6 +780,7 @@ export function Header() {
       router.push(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
       setSearchQuery("");
       setLiveResults([]); 
+      setIsMobileSearchOpen(false);
     }
   };
 
@@ -544,31 +804,31 @@ export function Header() {
   const handleDropdownKeyDown = (
     e: React.KeyboardEvent,
     index: number,
-    item: any,
-    refArray: React.MutableRefObject<(HTMLDivElement | null)[]>
+    item: any
   ) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       if (index + 1 < liveResults.length) {
-        refArray.current[index + 1]?.focus();
+        searchItemRefs.current[index + 1]?.focus();
       }
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (index - 1 >= 0) {
-        refArray.current[index - 1]?.focus();
+        searchItemRefs.current[index - 1]?.focus();
       }
     } else if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       router.push(`/features/product/${item.id}`);
       setLiveResults([]);
       setSearchQuery("");
+      setIsMobileSearchOpen(false);
     }
   };
 
-  const handleInputKeyDown = (e: React.KeyboardEvent, refArray: React.MutableRefObject<(HTMLDivElement | null)[]>) => {
+  const handleInputKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowDown' && liveResults.length > 0) {
       e.preventDefault();
-      refArray.current[0]?.focus();
+      searchItemRefs.current[0]?.focus();
     }
   };
 
@@ -576,12 +836,12 @@ export function Header() {
     <header className={`sticky top-0 z-50 backdrop-blur-xl border-b transition-colors duration-500 ${
       isDark ? 'bg-slate-950/80 border-slate-800 text-slate-100' : 'bg-white/80 border-slate-200 text-slate-900'
     }`}>
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4 relative">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-2 sm:gap-4 relative">
 
-        {/* Brand & Home */}
-        <div className="flex items-center gap-4">
+        {/* Brand & Home Navigation */}
+        <div className="flex items-center gap-2 sm:gap-4 shrink-0">
           <div 
-            className="flex items-center gap-2 text-2xl font-black tracking-tight cursor-pointer group"
+            className="flex items-center gap-2 text-xl sm:text-2xl font-black tracking-tight cursor-pointer group"
             onClick={() => router.push("/")}
           >
             <i className="fa-solid fa-bag-shopping text-indigo-500 group-hover:scale-110 transition-transform"></i>
@@ -593,7 +853,7 @@ export function Header() {
           <Button 
             variant="ghost" 
             onClick={() => router.push("/")}
-            className={`hidden sm:flex text-xs font-semibold rounded-2xl transition-all ${
+            className={`hidden sm:flex text-xs font-semibold cursor-pointer rounded-2xl transition-all ${
               isDark ? 'hover:bg-slate-800 text-slate-300' : 'hover:bg-slate-100 text-slate-700'
             }`}
           >
@@ -601,56 +861,7 @@ export function Header() {
           </Button>
         </div>
 
-        {/* Mobile Search Input */}
-        <div className="md:hidden flex-1 relative">
-          <form onSubmit={handleSearch} className="flex gap-2">
-            <Input
-              className={`w-full text-xs rounded-2xl border transition-all focus:ring-1 focus:ring-indigo-500 ${
-                isDark 
-                  ? 'bg-slate-900/80 border-slate-800 text-slate-200 placeholder-slate-500' 
-                  : 'bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400'
-              }`}
-              type="search"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={(e) => handleLiveSearch(e.target.value)}
-              onKeyDown={(e) => handleInputKeyDown(e, mobileRefs)}
-            />
-            <Button type="submit" size="icon" className="rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white shrink-0">
-              <i className="fa-solid fa-search text-xs"></i>
-            </Button>
-          </form>
-
-          {liveResults.length > 0 && (
-            <div className={`absolute left-0 right-0 shadow-2xl mt-2 max-h-60 overflow-y-auto border rounded-2xl z-50 backdrop-blur-xl ${
-              isDark ? 'bg-slate-900/95 border-slate-800 text-slate-200' : 'bg-white/95 border-slate-200 text-slate-800'
-            }`}>
-              {liveResults.map((item: any, idx: number) => (
-                <div
-                  key={item.id}
-                  ref={(el) => { mobileRefs.current[idx] = el; }}
-                  tabIndex={0}
-                  role="button"
-                  className={`p-3 text-xs font-medium cursor-pointer transition-colors ${
-                    isDark 
-                      ? 'hover:bg-indigo-600/20 focus:bg-indigo-600/30 text-slate-200' 
-                      : 'hover:bg-indigo-50 focus:bg-indigo-100 text-slate-800'
-                  }`}
-                  onClick={() => {
-                    router.push(`/features/product/${item.id}`);
-                    setLiveResults([]);
-                    setSearchQuery("");
-                  }}
-                  onKeyDown={(e) => handleDropdownKeyDown(e, idx, item, mobileRefs)}
-                >
-                  {item.title}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Desktop Search Input */}
+        {/* Desktop Search Field */}
         <div className="hidden md:flex gap-2 flex-1 max-w-md mx-4 relative">
           <form onSubmit={handleSearch} className="flex w-full gap-2">
             <Input
@@ -663,13 +874,14 @@ export function Header() {
               placeholder="Search products..."
               value={searchQuery}
               onChange={(e) => handleLiveSearch(e.target.value)} 
-              onKeyDown={(e) => handleInputKeyDown(e, desktopRefs)}
+              onKeyDown={handleInputKeyDown}
             />
-            <Button type="submit" className="rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs px-5">
+            <Button type="submit" className="rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs px-5 cursor-pointer">
               Search
             </Button>
           </form>
 
+          {/* Desktop Live Search Dropdown */}
           {liveResults.length > 0 && (
             <div className={`absolute top-full left-0 right-0 shadow-2xl mt-2 border rounded-2xl z-50 max-h-60 overflow-y-auto backdrop-blur-xl ${
               isDark ? 'bg-slate-900/95 border-slate-800 text-slate-200' : 'bg-white/95 border-slate-200 text-slate-800'
@@ -677,7 +889,7 @@ export function Header() {
               {liveResults.map((item: any, idx: number) => (
                 <div
                   key={item.id}
-                  ref={(el) => { desktopRefs.current[idx] = el; }}
+                  ref={(el) => { searchItemRefs.current[idx] = el; }}
                   tabIndex={0}
                   role="button"
                   className={`p-3 text-xs font-medium cursor-pointer transition-colors ${
@@ -690,7 +902,7 @@ export function Header() {
                     setLiveResults([]);
                     setSearchQuery("");
                   }}
-                  onKeyDown={(e) => handleDropdownKeyDown(e, idx, item, desktopRefs)}
+                  onKeyDown={(e) => handleDropdownKeyDown(e, idx, item)}
                 >
                   {item.title}
                 </div>
@@ -699,8 +911,23 @@ export function Header() {
           )}
         </div>
 
-        {/* Actions Section: Theme Toggle & Cart */}
-        <div className="flex items-center gap-3">
+        {/* Actions: Search Trigger (Mobile), Theme Switch, Cart */}
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          
+          {/* Mobile Search Toggle Icon */}
+          <button
+            onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
+            className={`md:hidden p-2 rounded-2xl border transition-all cursor-pointer ${
+              isDark 
+                ? 'bg-slate-900 border-slate-800 text-slate-200 hover:bg-slate-800' 
+                : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+            }`}
+            aria-label="Toggle search bar"
+          >
+            <i className={`fa-solid ${isMobileSearchOpen ? 'fa-xmark' : 'fa-magnifying-glass'} text-sm`}></i>
+          </button>
+
+          {/* Cart Icon Button */}
           <Tooltip>
             <TooltipTrigger asChild>
               <button
@@ -711,7 +938,7 @@ export function Header() {
                     : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
                 }`}
               >
-                <i className="fa-solid fa-cart-arrow-down text-lg"></i>
+                <i className="fa-solid fa-cart-arrow-down text-sm sm:text-base"></i>
               </button>
             </TooltipTrigger>
             <TooltipContent>
@@ -720,6 +947,60 @@ export function Header() {
           </Tooltip>
         </div>
       </div>
+
+      {/* Expandable Mobile Search Overlay */}
+      {isMobileSearchOpen && (
+        <div className="md:hidden px-4 pb-3 border-t border-slate-800/20 pt-3 relative">
+          <form onSubmit={handleSearch} className="flex gap-2">
+            <Input
+              className={`w-full text-xs rounded-2xl border transition-all focus:ring-1 focus:ring-indigo-500 ${
+                isDark 
+                  ? 'bg-slate-900/80 border-slate-800 text-slate-200 placeholder-slate-500' 
+                  : 'bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400'
+              }`}
+              type="search"
+              placeholder="Search products..."
+              value={searchQuery}
+              autoFocus
+              onChange={(e) => handleLiveSearch(e.target.value)}
+              onKeyDown={handleInputKeyDown}
+            />
+            <Button type="submit" size="icon" className="rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white shrink-0">
+              <i className="fa-solid fa-search text-xs"></i>
+            </Button>
+          </form>
+
+          {/* Mobile Live Results Dropdown */}
+          {liveResults.length > 0 && (
+            <div className={`absolute left-4 right-4 shadow-2xl mt-2 max-h-60 overflow-y-auto border rounded-2xl z-50 backdrop-blur-xl ${
+              isDark ? 'bg-slate-900/95 border-slate-800 text-slate-200' : 'bg-white/95 border-slate-200 text-slate-800'
+            }`}>
+              {liveResults.map((item: any, idx: number) => (
+                <div
+                  key={item.id}
+                  ref={(el) => { searchItemRefs.current[idx] = el; }}
+                  tabIndex={0}
+                  role="button"
+                  className={`p-3 text-xs font-medium cursor-pointer transition-colors ${
+                    isDark 
+                      ? 'hover:bg-indigo-600/20 focus:bg-indigo-600/30 text-slate-200' 
+                      : 'hover:bg-indigo-50 focus:bg-indigo-100 text-slate-800'
+                  }`}
+                  onClick={() => {
+                    router.push(`/features/product/${item.id}`);
+                    setLiveResults([]);
+                    setSearchQuery("");
+                    setIsMobileSearchOpen(false);
+                  }}
+                  onKeyDown={(e) => handleDropdownKeyDown(e, idx, item)}
+                >
+                  {item.title}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </header>
   );
 }
