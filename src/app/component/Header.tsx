@@ -838,7 +838,7 @@ export function Header() {
     }`}>
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-2 sm:gap-4 relative">
 
-        {/* Brand & Home Navigation */}
+        
         <div className="flex items-center gap-2 sm:gap-4 shrink-0">
           <div 
             className="flex items-center gap-2 text-xl sm:text-2xl font-black tracking-tight cursor-pointer group"
@@ -861,7 +861,7 @@ export function Header() {
           </Button>
         </div>
 
-        {/* Desktop Search Field */}
+
         <div className="hidden md:flex gap-2 flex-1 max-w-md mx-4 relative">
           <form onSubmit={handleSearch} className="flex w-full gap-2">
             <Input
@@ -881,7 +881,7 @@ export function Header() {
             </Button>
           </form>
 
-          {/* Desktop Live Search Dropdown */}
+        
           {liveResults.length > 0 && (
             <div className={`absolute top-full left-0 right-0 shadow-2xl mt-2 border rounded-2xl z-50 max-h-60 overflow-y-auto backdrop-blur-xl ${
               isDark ? 'bg-slate-900/95 border-slate-800 text-slate-200' : 'bg-white/95 border-slate-200 text-slate-800'
@@ -911,10 +911,10 @@ export function Header() {
           )}
         </div>
 
-        {/* Actions: Search Trigger (Mobile), Theme Switch, Cart */}
+        
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           
-          {/* Mobile Search Toggle Icon */}
+        
           <button
             onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
             className={`md:hidden p-2 rounded-2xl border transition-all cursor-pointer ${
@@ -927,7 +927,7 @@ export function Header() {
             <i className={`fa-solid ${isMobileSearchOpen ? 'fa-xmark' : 'fa-magnifying-glass'} text-sm`}></i>
           </button>
 
-          {/* Cart Icon Button */}
+          
           <Tooltip>
             <TooltipTrigger asChild>
               <button
@@ -948,7 +948,7 @@ export function Header() {
         </div>
       </div>
 
-      {/* Expandable Mobile Search Overlay */}
+      
       {isMobileSearchOpen && (
         <div className="md:hidden px-4 pb-3 border-t border-slate-800/20 pt-3 relative">
           <form onSubmit={handleSearch} className="flex gap-2">
@@ -970,7 +970,7 @@ export function Header() {
             </Button>
           </form>
 
-          {/* Mobile Live Results Dropdown */}
+          
           {liveResults.length > 0 && (
             <div className={`absolute left-4 right-4 shadow-2xl mt-2 max-h-60 overflow-y-auto border rounded-2xl z-50 backdrop-blur-xl ${
               isDark ? 'bg-slate-900/95 border-slate-800 text-slate-200' : 'bg-white/95 border-slate-200 text-slate-800'
