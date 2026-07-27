@@ -36,7 +36,7 @@ export default function Page() {
   const [isDark, setIsDark] = useState(true);
   const [qty, setQty] = useState(1);
 
-  // Sync theme with Landing Page
+
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
@@ -44,11 +44,11 @@ export default function Page() {
     }
   }, []);
 
-  // Fetch product and similar items
+
   useEffect(() => {
     if (!id) return;
 
-    // Scroll back to top when route/product changes
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     setLoading(true);
@@ -57,7 +57,6 @@ export default function Page() {
     setSimilarProducts([]);
     setQty(1);
 
-    // Fetch primary product first
     fetch(`https://dummyjson.com/products/${id}`)
       .then(res => {
         if (!res.ok) throw new Error('Product not found');
@@ -75,7 +74,6 @@ export default function Page() {
           category: data.category
         };
 
-        // Fetch similar products BEFORE stopping the loading state
         if (data.category) {
           try {
             const catRes = await fetch(`https://dummyjson.com/products/category/${data.category}`);
@@ -96,7 +94,6 @@ export default function Page() {
           }
         }
 
-        // Set main product and clear loading ONCE all data is ready
         setProduct(currentProduct);
         setLoading(false);
       })
@@ -161,8 +158,7 @@ export default function Page() {
       isDark ? 'bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-900'
     }`}>
       <div className="max-w-7xl mx-auto space-y-10">
-        
-        {/* Navigation */}
+
         <div className="flex justify-between items-center">
           <button
             onClick={() => router.back()}
@@ -176,14 +172,12 @@ export default function Page() {
           </button>
         </div>
 
-        {/* Loading Skeleton Indicator */}
         {loading && (
           <div className="flex justify-center items-center min-h-[50vh]">
             <p className="text-slate-400 font-semibold animate-pulse">Loading product details...</p>
           </div>
         )}
 
-        {/* Error State */}
         {!loading && (error || !product) && (
           <div className="text-center py-12">
             <p className="text-red-400 font-semibold">{error || 'Product not found.'}</p>
@@ -193,18 +187,15 @@ export default function Page() {
           </div>
         )}
 
-        {/* Main Content (Shown ONLY when loading is completely done) */}
         {!loading && product && (
           <div className="space-y-12">
-            
-            {/* 1. MAIN PRODUCT DETAILS CARD */}
+
             <div className={`border rounded-3xl overflow-hidden shadow-2xl backdrop-blur-md transition-all duration-500 ${
               isDark 
                 ? 'bg-slate-900/40 border-slate-800/80' 
                 : 'bg-white border-slate-200/80'
             }`}>
               <div className="md:flex">
-                {/* Product Image */}
                 <div className={`md:w-1/2 p-8 flex items-center justify-center border-b md:border-b-0 md:border-r ${
                   isDark ? 'bg-slate-950/60 border-slate-800/50' : 'bg-slate-100/60 border-slate-200'
                 }`}>
@@ -215,7 +206,6 @@ export default function Page() {
                   />
                 </div>
 
-                {/* Product Meta & Actions */}
                 <div className="p-8 md:w-1/2 flex flex-col justify-between">
                   <div>
                     <h1 className="text-3xl font-extrabold tracking-tight mb-2">{product.title}</h1>
@@ -233,7 +223,6 @@ export default function Page() {
                   </div>
 
                   <div className="space-y-6">
-                    {/* Quantity Control */}
                     <div className="flex items-center gap-4">
                       <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Quantity:</span>
                       <div className={`flex items-center gap-3 p-1.5 rounded-2xl border ${
@@ -263,7 +252,6 @@ export default function Page() {
                       </div>
                     </div>
 
-                    {/* Add & Buy Buttons */}
                     <div className="flex gap-4">
                       <Button 
                         className="flex-1 cursor-pointer bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-6 rounded-2xl shadow-lg shadow-indigo-600/30 transition-all" 
@@ -287,7 +275,6 @@ export default function Page() {
               </div>
             </div>
 
-            {/* 2. SIMILAR PRODUCTS SECTION (DISPLAYED BELOW) */}
             {similarProducts.length > 0 && (
               <div className="pt-4">
                 <h2 className="text-2xl font-extrabold tracking-tight mb-6">Similar Products</h2>

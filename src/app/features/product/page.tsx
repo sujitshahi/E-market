@@ -100,15 +100,12 @@ export default function Page() {
   }
 
   const displayedProducts = getFilteredProducts()
-  const navCategories = ['All', 'beauty', 'fragrances', 'furniture', 'groceries']
 
   return (
     <div className={`min-h-screen transition-colors duration-500 py-12 px-4 sm:px-6 lg:px-8 selection:bg-indigo-500 selection:text-white ${
       isDark ? 'bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-900'
     }`}>
       <div className="max-w-7xl mx-auto space-y-10">
-        
-        {/* Top Bar with Theme Toggle */}
         <div className="flex justify-end items-center">
           <button
             onClick={toggleTheme}
@@ -122,28 +119,29 @@ export default function Page() {
           </button>
         </div>
 
-        {/* Hero Header */}
         <header className="text-center space-y-4 max-w-2xl mx-auto">
           <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-xs font-semibold uppercase tracking-widest backdrop-blur-md ${
             isDark ? 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400' : 'bg-indigo-50 border-indigo-200 text-indigo-600'
           }`}>
-            <span>✨ Exclusive Catalog</span>
+            <span>✨ All-in-One Collection</span>
           </div>
           <h1 className={`text-4xl sm:text-6xl font-extrabold tracking-tight ${
             isDark 
               ? 'bg-linear-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent'
               : 'text-slate-900'
           }`}>
-            Discover Tech & Lifestyle
+            Quality Goods for <br />
+            <span className="bg-linear-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              Every Lifestyle.
+            </span>
           </h1>
           <p className={`text-sm sm:text-base font-normal leading-relaxed ${
             isDark ? 'text-slate-400' : 'text-slate-600'
           }`}>
-            Browse our top-rated products with real-time filtering and seamless navigation.
+            From trending electronics and beauty products to everyday essentials—explore our full catalog with instant search and live category filters.
           </p>
         </header>
 
-        {/* Offline / Error State UI */}
         {error && (
           <div className={`border rounded-3xl p-12 text-center max-w-md mx-auto space-y-4 ${
             isDark ? 'bg-slate-900/40 border-red-900/50 text-slate-200' : 'bg-white border-red-200 text-slate-800'
@@ -160,37 +158,14 @@ export default function Page() {
           </div>
         )}
 
-        {/* Content shown only when connected and loaded without errors */}
         {!error && (
           <>
-            {/* Category Pill Tabs */}
-            <div className="flex justify-center items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-              {navCategories.map(cat => {
-                const isActive = categoryFilter === cat.toLowerCase() || (cat === 'All' && categoryFilter === '')
-                return (
-                  <button
-                    key={cat}
-                    onClick={() => setCategoryFilter(cat === 'All' ? '' : cat.toLowerCase())}
-                    className={`px-5 py-2.5 rounded-2xl text-xs font-semibold capitalize tracking-wide transition-all duration-300 cursor-pointer whitespace-nowrap ${
-                      isActive
-                        ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 scale-105'
-                        : isDark
-                          ? 'bg-slate-900/80 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800'
-                          : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 shadow-xs'
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                )
-              })}
-            </div>
-
-            {/* Control Bar */}
+  
             <div className={`backdrop-blur-xl border rounded-3xl p-4 shadow-2xl flex flex-wrap gap-4 justify-between items-center transition-colors ${
               isDark ? 'bg-slate-900/60 border-slate-800/80' : 'bg-white/80 border-slate-200'
             }`}>
               <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-                {/* Category Select */}
+
                 <div className="relative flex-1 sm:flex-none">
                   <select
                     className={`w-full appearance-none border rounded-2xl px-4 py-2.5 pr-9 text-xs font-medium focus:outline-none focus:border-indigo-500 transition-all cursor-pointer capitalize ${
@@ -211,7 +186,6 @@ export default function Page() {
                   </div>
                 </div>
 
-                {/* Brand Select */}
                 <div className="relative flex-1 sm:flex-none">
                   <select
                     className={`w-full appearance-none border rounded-2xl px-4 py-2.5 pr-9 text-xs font-medium focus:outline-none focus:border-indigo-500 transition-all cursor-pointer ${
@@ -233,7 +207,6 @@ export default function Page() {
                 </div>
               </div>
 
-              {/* Sort Select */}
               <div className="relative flex-1 sm:flex-none w-full sm:w-auto">
                 <select
                   className={`w-full appearance-none border rounded-2xl px-4 py-2.5 pr-9 text-xs font-semibold focus:outline-none focus:border-indigo-400 transition-all cursor-pointer ${
@@ -255,7 +228,6 @@ export default function Page() {
               </div>
             </div>
 
-            {/* Loading Skeletons */}
             {loading && (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {[...Array(8)].map((_, i) => (
@@ -270,7 +242,6 @@ export default function Page() {
               </div>
             )}
 
-            {/* Product Cards Grid */}
             {!loading && (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {displayedProducts.map((product) => (
