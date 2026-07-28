@@ -1,7 +1,10 @@
 'use client';
 
-import { Suspense, useRef, useState, useEffect } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { Suspense, useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
+import { Loader2, PackageOpen } from 'lucide-react';
 
 interface Product {
   id: number;
@@ -14,53 +17,76 @@ interface Product {
   stock: number;
 }
 
+async function searchProducts(query: string, signal: AbortSignal): Promise<Product[]> {
+  const trimmedQuery = query.trim();
+  if (!trimmedQuery) return [];
+
+  const response = await fetch(
+    `https://dummyjson.com/products/search?q=${encodeURIComponent(trimmedQuery)}`,
+    { signal }
+  );
+
+  if (!response.ok) {
+    throw new Error('Search failed');
+  }
+
+  const data = await response.json();
+  const allItems: Product[] = data.products || [];
+
+  const searchWords = trimmedQuery.toLowerCase().split(' ').filter(Boolean);
+
+  return allItems.filter((item) => {
+    const combined = `${item.title} ${item.description || ''} ${item.category || ''} ${item.brand || ''}`.toLowerCase();
+    return searchWords.every((word) => combined.includes(word));
+  });
+}
+
 function SearchContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const query = searchParams.get('query') || '';
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchSearch = async () => {
-      if (!query.trim()) {
-        setProducts([]);
-        setLoading(false);
-        return;
-      }
+    if (!query.trim()) {
+      setProducts([]);
+      setLoading(false);
+      return;
+    }
 
-      setLoading(true);
+    const controller = new AbortController();
+    setLoading(true);
 
-      try {
-        const response = await fetch('https://dummyjson.com/products?limit=0');
-        const data = await response.json();
-        const allItems: Product[] = data.products || [];
+    searchProducts(query, controller.signal)
+      .then((results) => {
+        if (!controller.signal.aborted) {
+          setProducts(results);
+        }
+      })
+      .catch((error) => {
+        if (error instanceof Error && error.name === 'AbortError') return;
+        console.error('Search page error:', error);
+        if (!controller.signal.aborted) {
+          setProducts([]);
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      });
 
-        const searchWords = query.trim().toLowerCase().split(' ').filter(Boolean);
-
-        const filtered = allItems.filter((item) => {
-          const combined = `${item.title} ${item.description || ''} ${item.category || ''} ${item.brand || ''}`.toLowerCase();
-          return searchWords.every((word) => combined.includes(word));
-        });
-
-        setProducts(filtered);
-      } catch (error) {
-        console.error("Search page error:", error);
-        setProducts([]);
-      } finally {
-        setLoading(false);
-      }
+    return () => {
+      controller.abort();
     };
-
-    fetchSearch();
   }, [query]);
 
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-950 text-white flex justify-center items-center">
-        <div className="text-center">
-          <i className="fa-solid fa-spinner fa-spin text-3xl text-indigo-500 mb-4"></i>
+        <div className="text-center flex flex-col items-center justify-center">
+          <Loader2 className="w-8 h-8 text-indigo-500 animate-spin mb-4" />
           <p className="text-slate-400 text-sm">Searching catalog for "{query}"...</p>
         </div>
       </div>
@@ -70,8 +96,6 @@ function SearchContent() {
   return (
     <div className="min-h-screen bg-slate-950 text-white p-6 sm:p-10">
       <div className="max-w-7xl mx-auto">
-        
-
         <div className="mb-8 border-b border-slate-800 pb-4 flex items-center justify-between">
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
             Search Results for <span className="text-indigo-400">"{query}"</span>
@@ -81,21 +105,22 @@ function SearchContent() {
           </span>
         </div>
 
-
         {products.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {products.map((product) => (
-              <div
+              <Link
                 key={product.id}
-                onClick={() => router.push(`/features/product/${product.id}`)}
+                href={`/features/product/${product.id}`}
                 className="group border border-slate-800 rounded-2xl p-4 bg-slate-900/60 backdrop-blur-md hover:border-indigo-500/50 hover:bg-slate-900 transition-all cursor-pointer flex flex-col justify-between"
               >
                 <div>
                   <div className="w-full h-48 rounded-xl overflow-hidden bg-slate-800/50 mb-4 flex items-center justify-center p-2">
-                    <img
+                    <Image
                       src={product.thumbnail}
                       alt={product.title}
-                      className="max-h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                      width={300}
+                      height={300}
+                      className="max-h-full w-auto object-contain group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
 
@@ -121,12 +146,12 @@ function SearchContent() {
                     {product.stock} in stock
                   </span>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         ) : (
-          <div className="text-center py-20 border border-dashed border-slate-800 rounded-3xl bg-slate-900/30">
-            <i className="fa-solid fa-box-open text-4xl text-slate-600 mb-3"></i>
+          <div className="text-center py-20 border border-dashed border-slate-800 rounded-3xl bg-slate-900/30 flex flex-col items-center justify-center">
+            <PackageOpen className="w-10 h-10 text-slate-600 mb-3" />
             <h2 className="text-lg font-semibold text-slate-300">No products match your search</h2>
             <p className="text-xs text-slate-500 mt-1">Try checking for spelling errors or using simpler keywords.</p>
           </div>

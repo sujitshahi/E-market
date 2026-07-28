@@ -8,7 +8,7 @@ export default function error({ error, reset }: ErrorProps) {
   return (
     <div>
       <h1>{error.message}</h1>
-      <button onClick={reset}>Reset</button>
+      <button type="button" onClick={reset}>Reset</button>
     </div>
   )
 }

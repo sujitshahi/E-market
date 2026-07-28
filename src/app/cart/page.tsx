@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, Sun, Moon, ArrowLeft, ShieldCheck, Sparkles } from 'lucide-react'
+import Image from 'next/image'
 
 interface CartItem {
   id: number
@@ -38,8 +39,13 @@ export default function CartPage() {
 
   useEffect(() => {
     const loadCart = () => {
-      const storedCart = JSON.parse(localStorage.getItem('cart') || '[]')
-      setCart(storedCart)
+      try {
+        const storedCart = JSON.parse(localStorage.getItem('cart') || '[]')
+        setCart(storedCart)
+      } catch (e) {
+        console.error('Failed to parse cart items:', e)
+        setCart([])
+      }
     }
     loadCart()
   }, [])
@@ -73,14 +79,13 @@ export default function CartPage() {
         isDark ? 'bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-900'
       }`}
     >
-     
       <div className="pointer-events-none absolute -top-40 -left-40 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl" />
       <div className="pointer-events-none absolute top-1/2 -right-40 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
 
       <div className="relative max-w-7xl mx-auto space-y-8">
-        
         <nav className="flex justify-between items-center">
           <button
+          type="button"
             onClick={() => router.push('/')}
             className={`group inline-flex items-center gap-2 px-4 py-2 rounded-xl border text-xs font-semibold transition-all duration-200 cursor-pointer backdrop-blur-md ${
               isDark
@@ -93,6 +98,7 @@ export default function CartPage() {
           </button>
 
           <button
+          type="button"
             onClick={toggleTheme}
             className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl border text-xs font-semibold transition-all duration-200 cursor-pointer backdrop-blur-md ${
               isDark
@@ -114,7 +120,6 @@ export default function CartPage() {
           </button>
         </nav>
 
-       
         <header className="relative rounded-3xl overflow-hidden p-8 sm:p-10 border text-center space-y-3 backdrop-blur-md shadow-lg border-slate-800/50">
           <div
             className={`absolute inset-0 opacity-15 pointer-events-none ${
@@ -123,7 +128,7 @@ export default function CartPage() {
                 : 'bg-linear-to-r from-indigo-200 via-purple-200 to-pink-200'
             }`}
           />
-          
+
           <div
             className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[11px] font-semibold uppercase tracking-wider ${
               isDark
@@ -156,9 +161,7 @@ export default function CartPage() {
           </p>
         </header>
 
-       
         {cart.length === 0 ? (
-        
           <div
             className={`border rounded-3xl p-12 text-center max-w-md mx-auto space-y-6 backdrop-blur-xl ${
               isDark
@@ -175,7 +178,7 @@ export default function CartPage() {
             >
               <ShoppingBag className="w-10 h-10" />
             </div>
-            
+
             <div className="space-y-2">
               <h2 className="text-2xl font-bold tracking-tight">
                 Your cart feels light
@@ -191,12 +194,14 @@ export default function CartPage() {
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
               <button
+                type="button"
                 onClick={() => router.push('/')}
                 className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-all cursor-pointer shadow-lg shadow-indigo-600/25 active:scale-95"
               >
                 Start Shopping
               </button>
               <button
+                type="button"
                 onClick={() => router.push('/order-summary')}
                 className={`px-6 py-3 rounded-xl border text-xs font-semibold transition-all cursor-pointer active:scale-95 ${
                   isDark
@@ -209,8 +214,7 @@ export default function CartPage() {
             </div>
           </div>
         ) : (
-         
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">         
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             <div className="lg:col-span-8 space-y-4">
               {cart.map((item) => (
                 <div
@@ -222,7 +226,7 @@ export default function CartPage() {
                   }`}
                 >
                   <div className="flex items-center gap-4 w-full sm:w-auto">
-                   
+                    {/* Fixed Image Container */}
                     <div
                       className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden border shrink-0 ${
                         isDark
@@ -230,14 +234,15 @@ export default function CartPage() {
                           : 'bg-slate-100 border-slate-200'
                       }`}
                     >
-                      <img
+                      <Image
                         src={item.image}
                         alt={item.title}
-                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                        fill
+                        sizes="(max-width: 640px) 80px, 96px"
+                        className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>
 
-                   
                     <div className="flex-1 space-y-1">
                       <h3
                         className={`font-semibold text-sm sm:text-base line-clamp-1 transition-colors ${
@@ -249,7 +254,6 @@ export default function CartPage() {
                         {item.title}
                       </h3>
 
-                     
                       {(item.size || item.color) && (
                         <div className="flex items-center gap-2 pt-0.5">
                           {item.size && (
@@ -287,7 +291,6 @@ export default function CartPage() {
                     </div>
                   </div>
 
-              
                   <div
                     className={`flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4 pt-3 sm:pt-0 border-t sm:border-t-0 ${
                       isDark ? 'border-slate-800/80' : 'border-slate-100'
@@ -301,6 +304,7 @@ export default function CartPage() {
                       }`}
                     >
                       <button
+                        type="button"
                         onClick={() => updateQty(item.id, -1)}
                         disabled={item.qty === 1}
                         className={`p-1.5 rounded-lg transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed ${
@@ -318,6 +322,7 @@ export default function CartPage() {
                       </span>
 
                       <button
+                        type="button"
                         onClick={() => updateQty(item.id, 1)}
                         disabled={item.qty === 10}
                         className={`p-1.5 rounded-lg transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed ${
@@ -332,6 +337,7 @@ export default function CartPage() {
                     </div>
 
                     <button
+                      type="button"
                       onClick={() => removeItem(item.id)}
                       className={`p-2 rounded-xl border transition-all cursor-pointer ${
                         isDark
@@ -347,7 +353,6 @@ export default function CartPage() {
               ))}
             </div>
 
-           
             <div className="lg:col-span-4 lg:sticky lg:top-8">
               <div
                 className={`backdrop-blur-xl border rounded-3xl p-6 shadow-2xl space-y-6 ${
@@ -406,6 +411,7 @@ export default function CartPage() {
                 </div>
 
                 <button
+                  type="button"
                   onClick={() => router.push('/checkout')}
                   className="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 group transition-all cursor-pointer shadow-lg shadow-indigo-600/25 active:scale-95"
                 >
@@ -425,10 +431,8 @@ export default function CartPage() {
                 </div>
               </div>
             </div>
-
           </div>
         )}
-
       </div>
     </div>
   )

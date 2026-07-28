@@ -10,7 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useState, useRef, useEffect, memo, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface Product {
   id: number;
@@ -20,7 +20,7 @@ interface Product {
   brand?: string;
 }
 
-const HighlightText = memo(function HighlightText({ text, query }: { text: string; query: string }) {
+function HighlightText({ text, query }: { text: string; query: string }) {
   if (!query.trim()) return <>{text}</>;
 
   const escapedQuery = query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
@@ -30,7 +30,7 @@ const HighlightText = memo(function HighlightText({ text, query }: { text: strin
     <>
       {parts.map((part, i) =>
         part.toLowerCase() === query.toLowerCase() ? (
-          <mark key={i} className="bg-indigo-100 text-indigo-900 font-bold rounded px-0.5">
+          <mark key={`${part}-${i}`} className="bg-indigo-100 text-indigo-900 font-bold rounded px-0.5">
             {part}
           </mark>
         ) : (
@@ -39,9 +39,9 @@ const HighlightText = memo(function HighlightText({ text, query }: { text: strin
       )}
     </>
   );
-});
+}
 
-const SearchDropdown = memo(function SearchDropdown({
+function SearchDropdown({
   isLoading,
   results,
   query,
@@ -74,6 +74,7 @@ const SearchDropdown = memo(function SearchDropdown({
             ref={(el) => setItemRef(el, idx)}
             tabIndex={0}
             role="option"
+            aria-selected={false}
             className="block p-3 text-xs font-medium cursor-pointer transition-colors hover:bg-indigo-50 focus:bg-indigo-100 text-slate-800"
             onClick={onClose}
             onKeyDown={(e) => onKeyDown(e, idx)}
@@ -88,7 +89,7 @@ const SearchDropdown = memo(function SearchDropdown({
       )}
     </div>
   );
-});
+}
 
 export function Header() {
   const router = useRouter();
@@ -102,26 +103,39 @@ export function Header() {
   const desktopSearchRef = useRef<HTMLDivElement>(null);
   const mobileSearchRef = useRef<HTMLDivElement>(null);
 
+  // Added AbortController to cleanup and avoid race conditions / memory leaks
   useEffect(() => {
+    const controller = new AbortController();
+
     async function fetchProducts() {
       try {
-        const res = await fetch("https://dummyjson.com/products?limit=0");
+        const res = await fetch("https://dummyjson.com/products?limit=0", {
+          signal: controller.signal,
+        });
         const data = await res.json();
         setAllProducts(data.products || []);
-      } catch (err) {
-        console.error("Failed to load products for search:", err);
+      } catch (err: unknown) {
+        if (err instanceof Error && err.name !== "AbortError") {
+          console.error("Failed to load products for search:", err);
+        }
       } finally {
-        setIsLoading(false);
+        if (!controller.signal.aborted) {
+          setIsLoading(false);
+        }
       }
     }
+
     fetchProducts();
+
+    return () => {
+      controller.abort();
+    };
   }, []);
 
   useEffect(() => {
     searchItemRefs.current = searchItemRefs.current.slice(0, liveResults.length);
   }, [liveResults]);
 
-  // 2. Perform robust client-side filtering
   useEffect(() => {
     const trimmedQuery = searchQuery.trim().toLowerCase().replace(/\s+/g, " ");
 
@@ -164,10 +178,10 @@ export function Header() {
     };
   }, []);
 
-  const closeDropdown = useCallback(() => {
+  const closeDropdown = () => {
     setLiveResults([]);
     setIsMobileSearchOpen(false);
-  }, []);
+  };
 
   const handleSearch = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -177,24 +191,21 @@ export function Header() {
     }
   };
 
-  const setItemRef = useCallback((el: HTMLAnchorElement | null, idx: number) => {
+  const setItemRef = (el: HTMLAnchorElement | null, idx: number) => {
     searchItemRefs.current[idx] = el;
-  }, []);
+  };
 
-  const handleDropdownKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLAnchorElement>, index: number) => {
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        const nextIdx = (index + 1) % liveResults.length;
-        searchItemRefs.current[nextIdx]?.focus();
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        const prevIdx = (index - 1 + liveResults.length) % liveResults.length;
-        searchItemRefs.current[prevIdx]?.focus();
-      }
-    },
-    [liveResults.length]
-  );
+  const handleDropdownKeyDown = (e: React.KeyboardEvent<HTMLAnchorElement>, index: number) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const nextIdx = (index + 1) % liveResults.length;
+      searchItemRefs.current[nextIdx]?.focus();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      const prevIdx = (index - 1 + liveResults.length) % liveResults.length;
+      searchItemRefs.current[prevIdx]?.focus();
+    }
+  };
 
   const handleInputKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowDown' && liveResults.length > 0) {
@@ -232,6 +243,7 @@ export function Header() {
               className="w-full text-xs rounded-2xl border transition-all focus:ring-1 focus:ring-indigo-500 bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400"
               type="search"
               role="combobox"
+              aria-label="Search products"
               aria-expanded={showDropdown}
               aria-autocomplete="list"
               placeholder="Search products..."
@@ -258,6 +270,7 @@ export function Header() {
 
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <button
+            type="button"
             onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
             className="md:hidden p-2 rounded-2xl border transition-all cursor-pointer bg-white border-slate-200 text-slate-700 hover:bg-slate-100"
             aria-label="Toggle search bar"
@@ -290,6 +303,7 @@ export function Header() {
               className="w-full text-xs rounded-2xl border transition-all focus:ring-1 focus:ring-indigo-500 bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400"
               type="search"
               role="combobox"
+              aria-label="Search products mobile"
               aria-expanded={showDropdown}
               aria-autocomplete="list"
               placeholder="Search products..."

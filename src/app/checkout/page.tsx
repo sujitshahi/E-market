@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import * as yup from "yup";
-import { CheckCircle2,  ArrowLeft,  ShieldCheck,  ShoppingBag,  User,  Mail,  Phone,  MapPin,  CreditCard, Truck, Sparkles, Sun, Moon,} from 'lucide-react';
+import { CheckCircle2, ArrowLeft, ShieldCheck, ShoppingBag, User, Mail, Phone, MapPin, CreditCard, Truck, Sparkles, Sun, Moon } from 'lucide-react';
+import Image from 'next/image';
 
 interface CartItem {
   id: number;
@@ -203,6 +204,7 @@ export default function Page() {
         <div className="flex justify-between items-center">
           {!showOrderHistory ? (
             <button
+              type="button"
               onClick={() => router.push("/cart")}
               className={`flex items-center gap-2 px-4 py-2 rounded-2xl border text-xs font-semibold transition-all cursor-pointer shadow-xs hover:scale-105 active:scale-95 ${
                 isDark 
@@ -216,6 +218,7 @@ export default function Page() {
           ) : <div />}
 
           <button
+            type="button"
             onClick={toggleTheme}
             className={`flex items-center gap-2 px-4 py-2 rounded-2xl border text-xs font-semibold transition-all cursor-pointer shadow-xs hover:scale-105 active:scale-95 ${
               isDark 
@@ -250,7 +253,6 @@ export default function Page() {
         </header>
 
         {showOrderHistory ? (
-          
           <div className="max-w-3xl mx-auto">
             <div className={`backdrop-blur-xl border rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 ${
               isDark ? 'bg-emerald-950/20 border-emerald-500/30' : 'bg-emerald-50/50 border-emerald-200'
@@ -301,9 +303,11 @@ export default function Page() {
                           isDark ? 'bg-slate-900/40 border-slate-800/80' : 'bg-white border-slate-200/80'
                         }`}>
                           <div className="flex items-center gap-3">
-                            <img
+                            <Image
                               src={item.image}
                               alt={item.title}
+                              width={48}
+                              height={48}
                               className="w-12 h-12 object-cover rounded-xl border border-slate-800"
                             />
                             <div>
@@ -321,12 +325,14 @@ export default function Page() {
 
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <button
+                  type="button"
                   onClick={() => router.push("/order-summary")}
                   className="flex-1 py-3 px-5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition-all cursor-pointer shadow-lg shadow-indigo-600/30"
                 >
                   View Order History
                 </button>
                 <button
+                  type="button"
                   onClick={() => {
                     setShowOrderHistory(false);
                     router.push("/");
@@ -343,11 +349,8 @@ export default function Page() {
             </div>
           </div>
         ) : (
-        
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
             <div className="lg:col-span-7 space-y-6">
-
               <div className={`backdrop-blur-xl border rounded-3xl p-6 shadow-2xl space-y-5 ${
                 isDark ? 'bg-slate-900/60 border-slate-800/80' : 'bg-white/80 border-slate-200'
               }`}>
@@ -359,7 +362,7 @@ export default function Page() {
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-slate-400">First Name</label>
+                      <label className="text-xs font-medium text-slate-400 block">First Name
                       <input
                         type="text"
                         placeholder="John"
@@ -369,11 +372,12 @@ export default function Page() {
                           isDark ? 'bg-slate-950/80 border-slate-800 text-slate-200' : 'bg-slate-50 border-slate-200 text-slate-800'
                         } ${errors.firstName ? 'border-red-500/80' : ''}`}
                       />
+                      </label>
                       {errors.firstName && <p className="text-red-400 text-[10px] font-medium">{errors.firstName}</p>}
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-slate-400">Last Name</label>
+                      <label className="text-xs font-medium text-slate-400 block">Last Name
                       <input
                         type="text"
                         placeholder="Doe"
@@ -383,6 +387,7 @@ export default function Page() {
                           isDark ? 'bg-slate-950/80 border-slate-800 text-slate-200' : 'bg-slate-50 border-slate-200 text-slate-800'
                         } ${errors.lastName ? 'border-red-500/80' : ''}`}
                       />
+                      </label>
                       {errors.lastName && <p className="text-red-400 text-[10px] font-medium">{errors.lastName}</p>}
                     </div>
                   </div>
@@ -390,7 +395,7 @@ export default function Page() {
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-slate-400 flex items-center gap-1">
                       <Mail className="w-3 h-3 text-slate-400" /> Email Address
-                    </label>
+                    
                     <input
                       type="email"
                       placeholder="john@example.com"
@@ -400,13 +405,14 @@ export default function Page() {
                         isDark ? 'bg-slate-950/80 border-slate-800 text-slate-200' : 'bg-slate-50 border-slate-200 text-slate-800'
                       } ${errors.email ? 'border-red-500/80' : ''}`}
                     />
+                    </label>
                     {errors.email && <p className="text-red-400 text-[10px] font-medium">{errors.email}</p>}
                   </div>
 
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-slate-400 flex items-center gap-1">
-                      <Phone className="w-3 h-3 text-slate-400" /> Phone Number
-                    </label>
+                      <Phone className="w-3 h-3 text-slate-400" /> Phone Number                   
+                  
                     <input
                       type="text"
                       placeholder="98XXXXXXXX"
@@ -416,13 +422,14 @@ export default function Page() {
                         isDark ? 'bg-slate-950/80 border-slate-800 text-slate-200' : 'bg-slate-50 border-slate-200 text-slate-800'
                       } ${errors.phone ? 'border-red-500/80' : ''}`}
                     />
+                      </label>
                     {errors.phone && <p className="text-red-400 text-[10px] font-medium">{errors.phone}</p>}
                   </div>
 
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-slate-400 flex items-center gap-1">
                       <MapPin className="w-3 h-3 text-slate-400" /> Delivery Address
-                    </label>
+                  
                     <input
                       type="text"
                       placeholder="Street, City, Location"
@@ -432,6 +439,7 @@ export default function Page() {
                         isDark ? 'bg-slate-950/80 border-slate-800 text-slate-200' : 'bg-slate-50 border-slate-200 text-slate-800'
                       } ${errors.address ? 'border-red-500/80' : ''}`}
                     />
+                      </label>
                     {errors.address && <p className="text-red-400 text-[10px] font-medium">{errors.address}</p>}
                   </div>
                 </div>
@@ -446,9 +454,10 @@ export default function Page() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <label
+                  <button
+                    type="button"
                     onClick={() => setFormData(p => ({ ...p, paymentMethod: 'e-sewa' }))}
-                    className={`flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition-all ${
+                    className={`flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition-all text-left w-full ${
                       formData.paymentMethod === 'e-sewa'
                         ? 'bg-emerald-500/10 border-emerald-500 text-emerald-400'
                         : isDark
@@ -467,11 +476,12 @@ export default function Page() {
                         <p className="text-[10px] opacity-70">Digital Wallet</p>
                       </div>
                     </div>
-                  </label>
+                  </button>
 
-                  <label
+                  <button
+                    type="button"
                     onClick={() => setFormData(p => ({ ...p, paymentMethod: 'khalti' }))}
-                    className={`flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition-all ${
+                    className={`flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition-all text-left w-full ${
                       formData.paymentMethod === 'khalti'
                         ? 'bg-purple-500/10 border-purple-500 text-purple-400'
                         : isDark
@@ -490,11 +500,10 @@ export default function Page() {
                         <p className="text-[10px] opacity-70">Digital Wallet</p>
                       </div>
                     </div>
-                  </label>
+                  </button>
                 </div>
                 {errors.paymentMethod && <p className="text-red-400 text-[10px] font-medium">{errors.paymentMethod}</p>}
               </div>
-
             </div>
 
             <div className="lg:col-span-5 space-y-4">
@@ -509,9 +518,11 @@ export default function Page() {
                       isDark ? 'bg-slate-950/50 border-slate-800' : 'bg-slate-50 border-slate-200'
                     }`}>
                       <div className="flex items-center gap-3">
-                        <img
+                        <Image
                           src={buyNowItem.image}
                           alt={buyNowItem.title}
+                          width={48}
+                          height={48}
                           className="w-12 h-12 object-cover rounded-xl border border-slate-800"
                         />
                         <div>
@@ -527,9 +538,11 @@ export default function Page() {
                         isDark ? 'bg-slate-950/50 border-slate-800' : 'bg-slate-50 border-slate-200'
                       }`}>
                         <div className="flex items-center gap-3">
-                          <img
+                          <Image
                             src={item.image}
                             alt={item.title}
+                            width={48}
+                            height={48}
                             className="w-12 h-12 object-cover rounded-xl border border-slate-800"
                           />
                           <div>
@@ -561,6 +574,7 @@ export default function Page() {
                 </div>
 
                 <button
+                  type="submit"
                   onClick={handlePlaceOrder}
                   disabled={buyNowItem ? false : cart.length === 0}
                   className="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-xs font-semibold transition-all cursor-pointer shadow-lg shadow-indigo-600/30 active:scale-98"

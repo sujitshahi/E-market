@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { ShoppingBag, ArrowLeft, Calendar, User, Phone, MapPin, CreditCard, ChevronDown, ChevronUp, PackageCheck, Sun, Moon} from 'lucide-react';
+import Link from 'next/link';
+import { ShoppingBag, ArrowLeft, Calendar, User, Phone, MapPin, CreditCard, ChevronDown, ChevronUp, PackageCheck, Sun, Moon } from 'lucide-react';
+import Image from 'next/image';
 
 interface CartItem {
   id: number;
@@ -26,7 +27,6 @@ interface OrderHistory {
 }
 
 export default function OrderSummaryPage() {
-  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [isDark, setIsDark] = useState(true);
   const [orders, setOrders] = useState<OrderHistory[]>([]);
@@ -76,8 +76,8 @@ export default function OrderSummaryPage() {
     }`}>
       <div className="max-w-5xl mx-auto space-y-8">
         <div className="flex justify-between items-center">
-          <button
-            onClick={() => router.push("/")}
+          <Link
+            href="/"
             className={`flex items-center gap-2 px-4 py-2 rounded-2xl border text-xs font-semibold transition-all cursor-pointer shadow-xs hover:scale-105 active:scale-95 ${
               isDark 
                 ? 'bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-800' 
@@ -86,10 +86,12 @@ export default function OrderSummaryPage() {
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Continue Shopping</span>
-          </button>
+          </Link>
 
           <button
+            type="button"
             onClick={toggleTheme}
+            aria-label="Toggle theme mode"
             className={`flex items-center gap-2 px-4 py-2 rounded-2xl border text-xs font-semibold transition-all cursor-pointer shadow-xs hover:scale-105 active:scale-95 ${
               isDark 
                 ? 'bg-slate-900 border-slate-800 text-amber-400 hover:bg-slate-800' 
@@ -131,12 +133,13 @@ export default function OrderSummaryPage() {
             <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
               You haven't placed any orders yet. Once you complete checkout, your order history will appear here.
             </p>
-            <button
-              onClick={() => router.push("/")}
-              className="py-3 px-6 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition-all cursor-pointer shadow-lg shadow-indigo-600/30"
+            <Link
+              type="button"
+              href="/"
+              className="inline-block py-3 px-6 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition-all cursor-pointer shadow-lg shadow-indigo-600/30"
             >
               Start Shopping
-            </button>
+            </Link>
           </div>
         ) : (
           <div className="space-y-4">
@@ -152,10 +155,10 @@ export default function OrderSummaryPage() {
                       : 'bg-white/80 border-slate-200 hover:border-slate-300'
                   }`}
                 >
-                  
-                  <div
+                  <button
+                    type="button"
                     onClick={() => toggleExpand(order.id)}
-                    className="p-5 sm:p-6 flex flex-wrap items-center justify-between gap-4 cursor-pointer select-none"
+                    className="w-full text-left p-5 sm:p-6 flex flex-wrap items-center justify-between gap-4 cursor-pointer select-none"
                   >
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
@@ -185,7 +188,7 @@ export default function OrderSummaryPage() {
                         {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                       </div>
                     </div>
-                  </div>
+                  </button>
 
                   {isExpanded && (
                     <div className={`p-5 sm:p-6 border-t space-y-6 ${
@@ -231,9 +234,11 @@ export default function OrderSummaryPage() {
                               }`}
                             >
                               <div className="flex items-center gap-3">
-                                <img
+                                <Image
                                   src={item.image}
                                   alt={item.title}
+                                  width={48}
+                                  height={48}
                                   className="w-12 h-12 object-cover rounded-xl border border-slate-800"
                                 />
                                 <div>

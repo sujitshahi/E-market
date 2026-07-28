@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { useParams, useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import Image from 'next/image';
+import Link from 'next/link';
 
 interface Product {
   id: number;
@@ -24,6 +26,36 @@ interface SimilarProduct {
   thumbnail: string;
 }
 
+// Extracted fetch functions outside component body to satisfy linter AST checks
+async function fetchProductDetails(id: number, signal: AbortSignal) {
+  const res = await fetch(`https://dummyjson.com/products/${id}`, { signal });
+  if (!res.ok) throw new Error('Product not found');
+  return res.json();
+}
+
+async function fetchSimilarProducts(category: string, currentId: number, signal: AbortSignal): Promise<SimilarProduct[]> {
+  try {
+    const catRes = await fetch(`https://dummyjson.com/products/category/${category}`, { signal });
+    if (!catRes.ok) return [];
+    const catData = await catRes.json();
+    return (catData.products || [])
+      .filter((p: any) => p.id !== currentId)
+      .slice(0, 4)
+      .map((p: any) => ({
+        id: p.id,
+        title: p.title,
+        brand: p.brand || 'Generic',
+        price: p.price,
+        thumbnail: p.thumbnail,
+      }));
+  } catch (err: unknown) {
+    if (err instanceof Error && err.name !== 'AbortError') {
+      console.error('Error fetching similar items:', err);
+    }
+    return [];
+  }
+}
+
 export default function Page() {
   const router = useRouter();
   const params = useParams();
@@ -36,7 +68,6 @@ export default function Page() {
   const [isDark, setIsDark] = useState(true);
   const [qty, setQty] = useState(1);
 
-
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
@@ -44,10 +75,10 @@ export default function Page() {
     }
   }, []);
 
-
   useEffect(() => {
     if (!id) return;
 
+    const controller = new AbortController();
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -57,12 +88,10 @@ export default function Page() {
     setSimilarProducts([]);
     setQty(1);
 
-    fetch(`https://dummyjson.com/products/${id}`)
-      .then(res => {
-        if (!res.ok) throw new Error('Product not found');
-        return res.json();
-      })
-      .then(async data => {
+    async function loadData() {
+      try {
+        const data = await fetchProductDetails(id, controller.signal);
+
         const currentProduct: Product = {
           id: data.id,
           title: data.title,
@@ -74,34 +103,31 @@ export default function Page() {
           category: data.category
         };
 
+        setProduct(currentProduct);
+
         if (data.category) {
-          try {
-            const catRes = await fetch(`https://dummyjson.com/products/category/${data.category}`);
-            const catData = await catRes.json();
-            const similar = catData.products
-              .filter((p: any) => p.id !== data.id)
-              .slice(0, 4)
-              .map((p: any) => ({
-                id: p.id,
-                title: p.title,
-                brand: p.brand || 'Generic',
-                price: p.price,
-                thumbnail: p.thumbnail,
-              }));
+          const similar = await fetchSimilarProducts(data.category, data.id, controller.signal);
+          if (!controller.signal.aborted) {
             setSimilarProducts(similar);
-          } catch (err) {
-            console.error('Error fetching similar items:', err);
           }
         }
+      } catch (err: unknown) {
+        if (err instanceof Error && err.name !== 'AbortError') {
+          console.error(err);
+          setError('Failed to load product details.');
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    }
 
-        setProduct(currentProduct);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error(err);
-        setError('Failed to load product details.');
-        setLoading(false);
-      });
+    loadData();
+
+    return () => {
+      controller.abort();
+    };
   }, [id]);
 
   const addToCart = () => {
@@ -161,6 +187,7 @@ export default function Page() {
 
         <div className="flex justify-between items-center">
           <button
+            type="button"
             onClick={() => router.back()}
             className={`px-4 py-2 rounded-2xl border text-xs font-semibold transition-all cursor-pointer shadow-xs hover:scale-105 active:scale-95 ${
               isDark 
@@ -199,9 +226,12 @@ export default function Page() {
                 <div className={`md:w-1/2 p-8 flex items-center justify-center border-b md:border-b-0 md:border-r ${
                   isDark ? 'bg-slate-950/60 border-slate-800/50' : 'bg-slate-100/60 border-slate-200'
                 }`}>
-                  <img 
+                  <Image 
                     src={product.image} 
                     alt={product.title} 
+                    width={600}
+                    height={600}
+                    priority
                     className="w-full h-80 sm:h-96 object-contain rounded-2xl" 
                   />
                 </div>
@@ -280,22 +310,24 @@ export default function Page() {
                 <h2 className="text-2xl font-extrabold tracking-tight mb-6">Similar Products</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                   {similarProducts.map((similarProduct) => (
-                    <div
+                    <Link
                       key={similarProduct.id}
-                      className={`group border rounded-3xl p-4 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer overflow-hidden backdrop-blur-md ${
+                      href={`/features/product/${similarProduct.id}`}
+                      className={`group block border rounded-3xl p-4 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer overflow-hidden backdrop-blur-md ${
                         isDark 
                           ? 'bg-slate-900/40 hover:bg-slate-900/80 border-slate-800/80 hover:border-indigo-500/50' 
                           : 'bg-white hover:bg-slate-50 border-slate-200/80 hover:border-indigo-300'
                       }`}
-                      onClick={() => router.push(`/features/product/${similarProduct.id}`)}
                     >
                       <div className={`relative aspect-square w-full overflow-hidden rounded-2xl mb-4 border ${
                         isDark ? 'bg-slate-950/60 border-slate-800/50' : 'bg-slate-100 border-slate-200'
                       }`}>
-                        <img
+                        <Image
                           src={similarProduct.thumbnail}
                           alt={similarProduct.title}
-                          className="h-full w-full object-cover object-center group-hover:scale-108 transition-transform duration-700 ease-out"
+                          fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 25vw"
+                          className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
                         />
                       </div>
                       <h3 className="font-semibold text-sm line-clamp-1 group-hover:text-indigo-500 transition-colors">
@@ -305,7 +337,7 @@ export default function Page() {
                       <p className={`font-extrabold text-sm mt-2 ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`}>
                         ${similarProduct.price}
                       </p>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>

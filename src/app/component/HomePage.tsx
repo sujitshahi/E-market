@@ -2,6 +2,7 @@
 
 import { ShoppingBag, ArrowRight, Sparkles, ShieldCheck, Truck, Flame, TrendingUp, Star } from 'lucide-react';
 import Page from "../features/product/page";
+import Image from 'next/image';
 
 export default function HomePage() {
   return (
@@ -13,13 +14,16 @@ export default function HomePage() {
       <section className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
 
-          <div className="lg:col-span-8 relative overflow-hidden rounded-3xl border border-slate-800/80 bg-slate-900/40 p-8 sm:p-12 flex flex-col justify-between backdrop-blur-xl group">
+          <div className="lg:col-span-8 relative overflow-hidden rounded-3xl border border-slate-800/80 bg-slate-900/40 p-8 sm:p-12 flex flex-col justify-between backdrop-blur-xl group min-h-[420px]">
 
             <div className="absolute inset-0 z-0">
-              <img
-                className="h-full w-full object-cover object-center scale-105 filter brightness-50 group-hover:scale-100 transition-transform duration-1000 ease-out"
+              <Image
                 src="https://images.unsplash.com/photo-1580828343064-fde4fc206bc6?q=80&w=1400&auto=format&fit=crop"
                 alt="All Essentials Collection"
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 66vw"
+                className="object-cover object-center scale-105 filter brightness-50 group-hover:scale-100 transition-transform duration-1000 ease-out"
               />
               <div className="absolute inset-0 bg-linear-to-r from-slate-950 via-slate-950/80 to-slate-950/20" />
               <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-transparent to-transparent" />

@@ -180,7 +180,7 @@ export default function Page() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-slate-400">Your Name</label>
+                    <label className="text-xs font-medium text-slate-400">Your Name
                     <Input
                       name="name"
                       placeholder="John Doe"
@@ -191,10 +191,11 @@ export default function Page() {
                         isDark ? 'bg-slate-950/80 border-slate-800 text-slate-200' : 'bg-slate-50 border-slate-200 text-slate-800'
                       }`}
                     />
+                    </label>
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-slate-400">Your Email</label>
+                    <label className="text-xs font-medium text-slate-400">Your Email
                     <Input
                       type="email"
                       name="email"
@@ -206,11 +207,12 @@ export default function Page() {
                         isDark ? 'bg-slate-950/80 border-slate-800 text-slate-200' : 'bg-slate-50 border-slate-200 text-slate-800'
                       }`}
                     />
+                    </label>
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-slate-400">Subject</label>
+                  <label className="text-xs font-medium text-slate-400">Subject
                   <Input
                     name="subject"
                     placeholder="Inquiry about product stock"
@@ -221,10 +223,11 @@ export default function Page() {
                       isDark ? 'bg-slate-950/80 border-slate-800 text-slate-200' : 'bg-slate-50 border-slate-200 text-slate-800'
                     }`}
                   />
+                  </label>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-slate-400">Your Message</label>
+                  <label className="text-xs font-medium text-slate-400">Your Message
                   <Textarea
                     name="message"
                     placeholder="Write your message here..."
@@ -236,6 +239,7 @@ export default function Page() {
                       isDark ? 'bg-slate-950/80 border-slate-800 text-slate-200' : 'bg-slate-50 border-slate-200 text-slate-800'
                     }`}
                   />
+                  </label>
                 </div>
 
                 <Button
@@ -265,3 +269,6 @@ export default function Page() {
     </div>
   );
 }
+
+
+

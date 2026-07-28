@@ -1,7 +1,8 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useState, useEffect, useCallback } from 'react'
 
 type Product = {
   id: number
@@ -16,8 +17,13 @@ type Product = {
   stock: number
 }
 
+async function fetchProductsData(signal: AbortSignal) {
+  const res = await fetch('https://dummyjson.com/products', { signal })
+  if (!res.ok) throw new Error('Failed to fetch data')
+  return res.json()
+}
+
 export default function Page() {
-  const router = useRouter()
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -44,38 +50,46 @@ export default function Page() {
     })
   }
 
-  const fetchProducts = () => {
+  const loadProducts = useCallback(async (signal?: AbortSignal) => {
     setLoading(true)
     setError(null)
 
-    fetch('https://dummyjson.com/products')
-      .then(res => {
-        if (!res.ok) throw new Error('Failed to fetch data')
-        return res.json()
-      })
-      .then(data => {
-        setProducts(data.products)
+    try {
+      const controller = new AbortController()
+      const activeSignal = signal || controller.signal
 
-        const allCategories = data.products.map((product: Product) => product.category)
-        const uniqueCategories = Array.from(new Set(allCategories)) as string[]
+      const data = await fetchProductsData(activeSignal)
+      
+      if (activeSignal.aborted) return
 
-        const allBrands = data.products.map((product: Product) => product.brand).filter(Boolean)
-        const uniqueBrands = Array.from(new Set(allBrands)) as string[]
+      const fetchedProducts: Product[] = data.products || []
+      setProducts(fetchedProducts)
 
-        setCategories(uniqueCategories)
-        setBrands(uniqueBrands)
-        setLoading(false)
-      })
-      .catch(err => {
-        console.error(err)
-        setError('Unable to load products. Please check your internet connection.')
-        setLoading(false)
-      })
-  }
+      const allCategories = fetchedProducts.map((product) => product.category)
+      const uniqueCategories = Array.from(new Set(allCategories))
+
+      const allBrands = fetchedProducts.map((product) => product.brand).filter(Boolean)
+      const uniqueBrands = Array.from(new Set(allBrands))
+
+      setCategories(uniqueCategories)
+      setBrands(uniqueBrands)
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === 'AbortError') return
+      console.error(err)
+      setError('Unable to load products. Please check your internet connection.')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
 
   useEffect(() => {
-    fetchProducts()
-  }, [])
+    const controller = new AbortController()
+    loadProducts(controller.signal)
+
+    return () => {
+      controller.abort()
+    }
+  }, [loadProducts])
 
   const getFilteredProducts = () => {
     let list = [...products]
@@ -89,11 +103,11 @@ export default function Page() {
 
     switch (sortBy) {
       case 'price-low':
-        return list.sort((a, b) => a.price - b.price)
+        return list.slice().sort((a, b) => a.price - b.price)
       case 'price-high':
-        return list.sort((a, b) => b.price - a.price)
+        return list.slice().sort((a, b) => b.price - a.price)
       case 'popularity':
-        return list.sort((a, b) => b.rating - a.rating)
+        return list.slice().sort((a, b) => b.rating - a.rating)
       default:
         return list
     }
@@ -108,8 +122,10 @@ export default function Page() {
       <div className="max-w-7xl mx-auto space-y-10">
         <div className="flex justify-end items-center">
           <button
+            type="button"
             onClick={toggleTheme}
-            className={`flex items-center gap-2 px-4 py-2 rounded-2xl border text-xs font-semibold transition-all cursor-pointer shadow-sm hover:scale-105 active:scale-95 ${
+            aria-label="Toggle theme mode"
+            className={`flex items-center gap-2 px-4 py-2 rounded-2xl border text-xs font-semibold transition-all cursor-pointer shadow-xs hover:scale-105 active:scale-95 ${
               isDark 
                 ? 'bg-slate-900 border-slate-800 text-amber-400 hover:bg-slate-800' 
                 : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
@@ -150,7 +166,8 @@ export default function Page() {
             <h3 className="text-lg font-bold">You are offline</h3>
             <p className="text-xs text-slate-400">{error}</p>
             <button
-              onClick={fetchProducts}
+              type="button"
+              onClick={() => loadProducts()}
               className="mt-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition-all cursor-pointer shadow-lg shadow-indigo-600/20"
             >
               Try Again
@@ -160,7 +177,6 @@ export default function Page() {
 
         {!error && (
           <>
-  
             <div className={`backdrop-blur-xl border rounded-3xl p-4 shadow-2xl flex flex-wrap gap-4 justify-between items-center transition-colors ${
               isDark ? 'bg-slate-900/60 border-slate-800/80' : 'bg-white/80 border-slate-200'
             }`}>
@@ -168,6 +184,7 @@ export default function Page() {
 
                 <div className="relative flex-1 sm:flex-none">
                   <select
+                    aria-label="Filter products by category"
                     className={`w-full appearance-none border rounded-2xl px-4 py-2.5 pr-9 text-xs font-medium focus:outline-none focus:border-indigo-500 transition-all cursor-pointer capitalize ${
                       isDark 
                         ? 'bg-slate-950/80 border-slate-800 text-slate-300' 
@@ -177,8 +194,10 @@ export default function Page() {
                     onChange={(e) => setCategoryFilter(e.target.value)}
                   >
                     <option value="">All Categories</option>
-                    {categories.map((cat, idx) => (
-                      <option key={idx} value={cat} className={isDark ? 'bg-slate-900' : 'bg-white'}>{cat}</option>
+                    {categories.map((cat) => (
+                      <option key={cat} value={cat} className={isDark ? 'bg-slate-900' : 'bg-white'}>
+                        {cat}
+                      </option>
                     ))}
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
@@ -188,6 +207,7 @@ export default function Page() {
 
                 <div className="relative flex-1 sm:flex-none">
                   <select
+                    aria-label="Filter products by brand"
                     className={`w-full appearance-none border rounded-2xl px-4 py-2.5 pr-9 text-xs font-medium focus:outline-none focus:border-indigo-500 transition-all cursor-pointer ${
                       isDark 
                         ? 'bg-slate-950/80 border-slate-800 text-slate-300' 
@@ -197,8 +217,10 @@ export default function Page() {
                     onChange={(e) => setBrandFilter(e.target.value)}
                   >
                     <option value="">All Brands</option>
-                    {brands.map((brand, idx) => (
-                      <option key={idx} value={brand} className={isDark ? 'bg-slate-900' : 'bg-white'}>{brand}</option>
+                    {brands.map((brand) => (
+                      <option key={brand} value={brand} className={isDark ? 'bg-slate-900' : 'bg-white'}>
+                        {brand}
+                      </option>
                     ))}
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
@@ -209,6 +231,7 @@ export default function Page() {
 
               <div className="relative flex-1 sm:flex-none w-full sm:w-auto">
                 <select
+                  aria-label="Sort products"
                   className={`w-full appearance-none border rounded-2xl px-4 py-2.5 pr-9 text-xs font-semibold focus:outline-none focus:border-indigo-400 transition-all cursor-pointer ${
                     isDark 
                       ? 'bg-indigo-950/50 border-indigo-500/30 text-indigo-300' 
@@ -245,10 +268,10 @@ export default function Page() {
             {!loading && (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {displayedProducts.map((product) => (
-                  <div
+                  <Link
                     key={product.id}
-                    onClick={() => router.push(`/features/product/${product.id}`)}
-                    className={`group relative border rounded-3xl p-4 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl flex flex-col justify-between cursor-pointer overflow-hidden backdrop-blur-sm ${
+                    href={`/features/product/${product.id}`}
+                    className={`group relative border rounded-3xl p-4 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl flex flex-col justify-between cursor-pointer overflow-hidden backdrop-blur-xs ${
                       isDark 
                         ? 'bg-slate-900/40 hover:bg-slate-900/80 border-slate-800/80 hover:border-indigo-500/50 hover:shadow-indigo-500/10' 
                         : 'bg-white hover:bg-slate-50 border-slate-200/80 hover:border-indigo-300 hover:shadow-slate-200'
@@ -258,13 +281,15 @@ export default function Page() {
                       <div className={`relative aspect-square w-full overflow-hidden rounded-2xl mb-4 border ${
                         isDark ? 'bg-slate-950/60 border-slate-800/50' : 'bg-slate-100 border-slate-200'
                       }`}>
-                        <img
+                        <Image
                           src={product.images?.[0] ?? product.thumbnail ?? ''}
                           alt={product.title}
-                          className="h-full w-full object-cover object-center group-hover:scale-108 transition-transform duration-700 ease-out"
+                          fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                          className="object-cover object-center group-hover:scale-108 transition-transform duration-700 ease-out"
                         />
                         
-                        <div className="absolute top-3 left-3 right-3 flex justify-between items-center pointer-events-none">
+                        <div className="absolute top-3 left-3 right-3 flex justify-between items-center pointer-events-none z-10">
                           {product.category && (
                             <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full border capitalize backdrop-blur-md ${
                               isDark 
@@ -311,13 +336,12 @@ export default function Page() {
                         </span>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             )}
           </>
         )}
-
       </div>
     </div>
   )
