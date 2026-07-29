@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import { ShoppingBag, Send, Mail, ShieldCheck, Truck, RotateCcw, Sparkles, ArrowRight} from 'lucide-react';
+import { ShoppingBag, Send, Mail, ShieldCheck, Truck, RotateCcw, Sparkles, ArrowRight } from 'lucide-react';
 
 export default function Footer() {
   const [email, setEmail] = useState('');
@@ -85,7 +85,6 @@ export default function Footer() {
                 <span>Contact Us</span>
               </Link>
             </li>
-           
           </ul>
         </div>
 
@@ -96,12 +95,13 @@ export default function Footer() {
           </p>
 
           <form onSubmit={handleSubscribe} className="space-y-2 pt-1">
+            <label htmlFor="footer-email" className="sr-only">
+              Subscribe to our newsletter
+            </label>
             <div className="relative flex items-center">
               <Mail className="w-4 h-4 text-slate-400 absolute left-3 pointer-events-none" />
-              <label htmlFor="footer-email" className="block text-xs font-medium text-gray-700 mb-1">
-                Subscribe to our newsletter
-              </label>
               <input
+                id="footer-email"
                 type="email"
                 placeholder="Enter your email"
                 value={email}

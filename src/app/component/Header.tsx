@@ -103,7 +103,6 @@ export function Header() {
   const desktopSearchRef = useRef<HTMLDivElement>(null);
   const mobileSearchRef = useRef<HTMLDivElement>(null);
 
-  // Replaced `finally` block with inline cleanup calls to allow React Compiler auto-memoization
   useEffect(() => {
     const controller = new AbortController();
 
@@ -112,6 +111,12 @@ export function Header() {
         const res = await fetch("https://dummyjson.com/products?limit=0", {
           signal: controller.signal,
         });
+
+        // Check if the HTTP response status is OK (200-299)
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
         const data = await res.json();
         
         if (!controller.signal.aborted) {
