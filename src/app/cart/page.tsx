@@ -31,13 +31,11 @@ export default function CartPage() {
     }
   }, [])
 
-  const toggleTheme = () => {
-    setIsDark((prev) => {
-      const nextTheme = !prev
-      localStorage.setItem('theme', nextTheme ? 'dark' : 'light')
-      return nextTheme
-    })
-  }
+ const toggleTheme = () => {
+  const nextTheme = !isDark;
+  setIsDark(nextTheme);
+  localStorage.setItem('theme', nextTheme ? 'dark' : 'light');
+};
 
   useEffect(() => {
     const loadCart = () => {

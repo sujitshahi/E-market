@@ -103,7 +103,7 @@ export function Header() {
   const desktopSearchRef = useRef<HTMLDivElement>(null);
   const mobileSearchRef = useRef<HTMLDivElement>(null);
 
-  // Added AbortController to cleanup and avoid race conditions / memory leaks
+  // Replaced `finally` block with inline cleanup calls to allow React Compiler auto-memoization
   useEffect(() => {
     const controller = new AbortController();
 
@@ -113,12 +113,16 @@ export function Header() {
           signal: controller.signal,
         });
         const data = await res.json();
-        setAllProducts(data.products || []);
+        
+        if (!controller.signal.aborted) {
+          setAllProducts(data.products || []);
+          setIsLoading(false);
+        }
       } catch (err: unknown) {
         if (err instanceof Error && err.name !== "AbortError") {
           console.error("Failed to load products for search:", err);
         }
-      } finally {
+
         if (!controller.signal.aborted) {
           setIsLoading(false);
         }

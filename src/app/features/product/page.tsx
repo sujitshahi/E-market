@@ -17,6 +17,7 @@ type Product = {
   stock: number
 }
 
+// Extracted fetch function outside component body to satisfy linter AST rules
 async function fetchProductsData(signal: AbortSignal) {
   const res = await fetch('https://dummyjson.com/products', { signal })
   if (!res.ok) throw new Error('Failed to fetch data')
@@ -43,21 +44,19 @@ export default function Page() {
   }, [])
 
   const toggleTheme = () => {
-    setIsDark(prev => {
-      const nextTheme = !prev
-      localStorage.setItem('theme', nextTheme ? 'dark' : 'light')
-      return nextTheme
-    })
-  }
+    const nextTheme = !isDark;
+    setIsDark(nextTheme);
+    localStorage.setItem('theme', nextTheme ? 'dark' : 'light');
+  };
 
   const loadProducts = useCallback(async (signal?: AbortSignal) => {
     setLoading(true)
     setError(null)
 
-    try {
-      const controller = new AbortController()
-      const activeSignal = signal || controller.signal
+    const controller = new AbortController()
+    const activeSignal = signal || controller.signal
 
+    try {
       const data = await fetchProductsData(activeSignal)
       
       if (activeSignal.aborted) return
@@ -73,12 +72,19 @@ export default function Page() {
 
       setCategories(uniqueCategories)
       setBrands(uniqueBrands)
+
+      if (!activeSignal.aborted) {
+        setLoading(false)
+      }
     } catch (err: unknown) {
       if (err instanceof Error && err.name === 'AbortError') return
+      
       console.error(err)
-      setError('Unable to load products. Please check your internet connection.')
-    } finally {
-      setLoading(false)
+      
+      if (!activeSignal.aborted) {
+        setError('Unable to load products. Please check your internet connection.')
+        setLoading(false)
+      }
     }
   }, [])
 

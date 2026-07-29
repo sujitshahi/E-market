@@ -55,11 +55,9 @@ export default function OrderSummaryPage() {
   }, []);
 
   const toggleTheme = () => {
-    setIsDark(prev => {
-      const nextTheme = !prev;
-      localStorage.setItem('theme', nextTheme ? 'dark' : 'light');
-      return nextTheme;
-    });
+    const nextTheme = !isDark;
+    setIsDark(nextTheme);
+    localStorage.setItem('theme', nextTheme ? 'dark' : 'light');
   };
 
   const toggleExpand = (id: string) => {

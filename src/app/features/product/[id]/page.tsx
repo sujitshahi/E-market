@@ -111,14 +111,18 @@ export default function Page() {
             setSimilarProducts(similar);
           }
         }
+
+        if (!controller.signal.aborted) {
+          setLoading(false); // Clean up on success
+        }
       } catch (err: unknown) {
         if (err instanceof Error && err.name !== 'AbortError') {
           console.error(err);
           setError('Failed to load product details.');
         }
-      } finally {
+
         if (!controller.signal.aborted) {
-          setLoading(false);
+          setLoading(false); // Clean up on failure
         }
       }
     }
