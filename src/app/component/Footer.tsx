@@ -98,6 +98,9 @@ export default function Footer() {
           <form onSubmit={handleSubscribe} className="space-y-2 pt-1">
             <div className="relative flex items-center">
               <Mail className="w-4 h-4 text-slate-400 absolute left-3 pointer-events-none" />
+              <label htmlFor="footer-email" className="block text-xs font-medium text-gray-700 mb-1">
+                Subscribe to our newsletter
+              </label>
               <input
                 type="email"
                 placeholder="Enter your email"
