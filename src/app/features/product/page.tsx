@@ -68,7 +68,7 @@ export default function Page() {
       const allCategories = fetchedProducts.map((product) => product.category)
       const uniqueCategories = Array.from(new Set(allCategories))
 
-      const allBrands = fetchedProducts.map((product) => product.brand).filter(Boolean)
+      const allBrands = fetchedProducts.flatMap((product) => product.brand ? [product.brand] : [])
       const uniqueBrands = Array.from(new Set(allBrands))
 
       setCategories(uniqueCategories)

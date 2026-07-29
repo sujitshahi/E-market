@@ -19,8 +19,10 @@ interface CartItem {
 export default function CartPage() {
   const router = useRouter()
   const [cart, setCart] = useState<CartItem[]>([])
-  const [total, setTotal] = useState(0)
   const [isDark, setIsDark] = useState(true)
+
+  // Derived directly during render — no state or extra render cycle needed
+  const total = cart.reduce((acc, item) => acc + item.price * item.qty, 0)
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme')
@@ -49,11 +51,6 @@ export default function CartPage() {
     }
     loadCart()
   }, [])
-
-  useEffect(() => {
-    const newTotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0)
-    setTotal(newTotal)
-  }, [cart])
 
   const updateQty = (id: number, change: number) => {
     const updatedCart = cart.map((item) =>
@@ -85,7 +82,7 @@ export default function CartPage() {
       <div className="relative max-w-7xl mx-auto space-y-8">
         <nav className="flex justify-between items-center">
           <button
-          type="button"
+            type="button"
             onClick={() => router.push('/')}
             className={`group inline-flex items-center gap-2 px-4 py-2 rounded-xl border text-xs font-semibold transition-all duration-200 cursor-pointer backdrop-blur-md ${
               isDark
@@ -98,7 +95,7 @@ export default function CartPage() {
           </button>
 
           <button
-          type="button"
+            type="button"
             onClick={toggleTheme}
             className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl border text-xs font-semibold transition-all duration-200 cursor-pointer backdrop-blur-md ${
               isDark
@@ -226,7 +223,6 @@ export default function CartPage() {
                   }`}
                 >
                   <div className="flex items-center gap-4 w-full sm:w-auto">
-                    {/* Fixed Image Container */}
                     <div
                       className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden border shrink-0 ${
                         isDark

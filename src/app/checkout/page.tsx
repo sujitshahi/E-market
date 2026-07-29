@@ -52,7 +52,11 @@ export default function Page() {
   const [isDark, setIsDark] = useState(true);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [buyNowItem, setBuyNowItem] = useState<BuyNowItem | null>(null);
-  const [total, setTotal] = useState(0);
+  
+  const total = buyNowItem 
+    ? buyNowItem.total 
+    : cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+
   const [orderHistory, setOrderHistory] = useState<OrderHistory[]>([]);
   const [showOrderHistory, setShowOrderHistory] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -125,15 +129,6 @@ export default function Page() {
       validateEmail();
     }
   }, [formData.email]);
-
-  useEffect(() => {
-    if (buyNowItem) {
-      setTotal(buyNowItem.total);
-    } else {
-      const t = cart.reduce((s, item) => s + item.price * item.qty, 0);
-      setTotal(t);
-    }
-  }, [cart, buyNowItem]);
 
   const handlePlaceOrder = async () => {
     try {    
