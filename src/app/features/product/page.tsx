@@ -17,7 +17,6 @@ type Product = {
   stock: number
 }
 
-
 async function fetchProductsData(signal: AbortSignal) {
   const res = await fetch('https://dummyjson.com/products', { signal })
   if (!res.ok) throw new Error('Failed to fetch data')
@@ -72,6 +71,10 @@ export default function Page() {
 
       setCategories(uniqueCategories)
       setBrands(uniqueBrands)
+
+      if (!activeSignal.aborted) {
+        setLoading(false)
+      }
     } catch (err: unknown) {
       if (err instanceof Error && err.name === 'AbortError') return
       
@@ -79,9 +82,6 @@ export default function Page() {
       
       if (!activeSignal.aborted) {
         setError('Unable to load products. Please check your internet connection.')
-      }
-    } finally {
-      if (!activeSignal.aborted) {
         setLoading(false)
       }
     }

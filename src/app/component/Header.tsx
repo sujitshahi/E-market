@@ -112,9 +112,12 @@ export function Header() {
           signal: controller.signal,
         });
 
-        // Check if the HTTP response status is OK (200-299)
         if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
+          console.error(`HTTP error! status: ${res.status}`);
+          if (!controller.signal.aborted) {
+            setIsLoading(false);
+          }
+          return;
         }
 
         const data = await res.json();

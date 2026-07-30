@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import ProductClientView from './ProductClientView';
+import Link from 'next/link';
 
 export interface Product {
   id: number;
@@ -117,12 +118,12 @@ export default async function Page({ params }: PageProps) {
     return (
       <div className="min-h-screen bg-slate-950 text-white flex flex-col justify-center items-center py-12">
         <p className="text-red-400 font-semibold mb-4">Product not found.</p>
-        <a
+        <Link
           href="/"
           className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-500 transition-colors"
         >
           Return to Home
-        </a>
+        </Link>
       </div>
     );
   }
