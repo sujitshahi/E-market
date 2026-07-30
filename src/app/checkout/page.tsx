@@ -113,18 +113,18 @@ export default function Page() {
     localStorage.setItem('theme', nextTheme ? 'dark' : 'light');
   };
 
+  // Live email validation using synchronous schema validation
   useEffect(() => {
-    const validateEmail = async () => {
-      try {
-        await schema.validateAt("email", { email: formData.email });
-        setErrors((prev) => ({ ...prev, email: "" }));
-      } catch (err: any) {
-        setErrors((prev) => ({ ...prev, email: err.message }));
-      }
-    };
+    if (formData.email.trim() === "") {
+      setErrors((prev) => ({ ...prev, email: "" }));
+      return;
+    }
 
-    if (formData.email.trim() !== "") {
-      validateEmail();
+    try {
+      schema.validateSyncAt("email", { email: formData.email });
+      setErrors((prev) => ({ ...prev, email: "" }));
+    } catch (err: any) {
+      setErrors((prev) => ({ ...prev, email: err.message }));
     }
   }, [formData.email]);
 
@@ -404,7 +404,7 @@ export default function Page() {
 
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-slate-400 flex items-center gap-1">
-                      <Phone className="w-3 h-3 text-slate-400" /> Phone Number                   
+                      <Phone className="w-3 h-3 text-slate-400" /> Phone Number                  
                   
                     <input
                       type="text"
