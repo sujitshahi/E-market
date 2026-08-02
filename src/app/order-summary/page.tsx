@@ -62,7 +62,10 @@ export default function OrderSummaryPage() {
 
   const toggleExpand = (id: string) => {
     setExpandedOrder(expandedOrder === id ? null : id);
-  };
+  };    
+
+
+  
 
   if (!mounted) {
     return <div className="min-h-screen" />;
