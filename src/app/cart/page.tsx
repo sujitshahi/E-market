@@ -21,7 +21,6 @@ export default function CartPage() {
   const [cart, setCart] = useState<CartItem[]>([])
   const [isDark, setIsDark] = useState(true)
 
-  // Derived directly during render — no state or extra render cycle needed
   const total = cart.reduce((acc, item) => acc + item.price * item.qty, 0)
 
   useEffect(() => {

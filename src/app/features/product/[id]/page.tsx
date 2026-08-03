@@ -74,7 +74,6 @@ type PageProps = {
   params: Promise<{ id: string }>;
 };
 
-// Generates dynamic Metadata for SEO / Search Previews
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await params;
   const id = Number(resolvedParams.id);

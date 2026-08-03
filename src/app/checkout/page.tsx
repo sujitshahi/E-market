@@ -113,7 +113,6 @@ export default function Page() {
     localStorage.setItem('theme', nextTheme ? 'dark' : 'light');
   };
 
-  // Live email validation using synchronous schema validation
   useEffect(() => {
     if (formData.email.trim() === "") {
       setErrors((prev) => ({ ...prev, email: "" }));

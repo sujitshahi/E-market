@@ -17,7 +17,6 @@ type Product = {
   stock: number
 }
 
-// Extracted helper: Keeps try/catch/finally out of the React hook/component scope
 async function safeFetchProducts(signal: AbortSignal) {
   try {
     const res = await fetch('https://dummyjson.com/products', { signal })
@@ -37,7 +36,6 @@ export default function Page() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Lazy state initializer prevents set-state-in-effect warning
   const [isDark, setIsDark] = useState(() => {
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('theme:v1')

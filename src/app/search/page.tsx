@@ -47,7 +47,6 @@ type SearchPageProps = {
   searchParams: Promise<{ query?: string }>;
 };
 
-// Added generateMetadata to resolve the missing metadata warning
 export async function generateMetadata({ searchParams }: SearchPageProps): Promise<Metadata> {
   const resolvedParams = await searchParams;
   const query = resolvedParams.query || '';
