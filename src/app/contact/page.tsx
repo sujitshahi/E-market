@@ -12,7 +12,7 @@ export default function Page() {
   const [isDark, setIsDark] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState({   
     name: '',
     email: '',
     subject: '',
