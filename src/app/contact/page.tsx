@@ -129,7 +129,7 @@ export default function Page() {
                 <div className={`flex items-start gap-4 p-4 rounded-2xl border transition-all ${
                   isDark ? 'bg-slate-950/50 border-slate-800' : 'bg-slate-50 border-slate-200'
                 }`}>
-                  <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  <div   className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                     <Phone className="w-4 h-4" />
                   </div>
                   <div className="space-y-1">

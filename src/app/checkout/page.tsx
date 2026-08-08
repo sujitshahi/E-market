@@ -304,7 +304,7 @@ export default function Page() {
                             />
                             <div>
                               <p className="font-medium text-sm line-clamp-1">{item.title}</p>
-                              <p className="text-xs text-slate-400">Qty: {item.qty}</p>
+                              <p    className="text-xs text-slate-400">Qty: {item.qty}</p>
                             </div>
                           </div>
                           <p className="font-bold text-sm">${(item.price * item.qty).toFixed(2)}</p>
