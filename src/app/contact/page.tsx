@@ -122,7 +122,7 @@ export default function Page() {
                   </div>
                   <div className="space-y-1">
                     <p className="text-slate-400 font-medium">Email Us</p>
-                    <p className="font-bold   text-sm">support@shop.com</p>
+                    <p className="font-bold text-sm">support@shop.com</p>
                   </div>
                 </div>
                 
