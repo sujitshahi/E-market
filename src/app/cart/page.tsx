@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
-import { Trash2, Plus, Minus, ShoppingBag,         ArrowRight, Sun, Moon, ArrowLeft, ShieldCheck, Sparkles } from 'lucide-react'
+import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, Sun, Moon, ArrowLeft, ShieldCheck, Sparkles } from 'lucide-react'
 import Image from 'next/image'
 
 interface CartItem {
