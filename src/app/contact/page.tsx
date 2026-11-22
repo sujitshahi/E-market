@@ -71,7 +71,7 @@ export default function Page() {
             className={`flex items-center gap-2 px-4 py-2 rounded-2xl border text-xs font-semibold transition-all cursor-pointer shadow-xs hover:scale-105 active:scale-95 ${
               isDark 
                 ? 'bg-slate-900 border-slate-800 text-amber-400 hover:bg-slate-800' 
-                : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                : 'bg-white border-slate-200   text-slate-700 hover:bg-slate-100'
             }`}
           >
             {isDark ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
